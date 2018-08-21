@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>标题</title>
+  <link href="http://192.168.0.42/resource/cloud/css/global/base.css?v=20141111" rel="stylesheet" type="text/css" />
+  <link href="http://192.168.0.42/resource/cloud/css/global/widgets.css?v=20141111" rel="stylesheet" type="text/css" />
+  <link href="http://192.168.0.42/resource/cloud/css/global/button.css?v=20141111" rel="stylesheet" type="text/css" />
+  <link href="http://192.168.0.42/resource/cloud/css/module/table_inquiry.css?v=20141111" rel="stylesheet" type="text/css"
+  />
+  <link href="http://192.168.0.42/resource/cloud/css/global/table.css?v=20141111" rel="stylesheet" type="text/css" />
+
+
+  <link href="http://192.168.0.42/resource/cloud/css/global/general.css?v=20141111" rel="stylesheet" type="text/css" />
+  <link href="http://192.168.0.42/resource/cloud/css/module/cloud.css?v=20141111" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+  <div class="pl30 pt20 layout-form">
+    <table id="personRoleEdit" class="personRoleEdit form-table">
+      <input type="hidden" name="id" id="personId" value="">
+
+      <tbody>
+        <tr>
+          <td width="70">手&nbsp;机&nbsp;号：</td>
+          <td>
+            <input type="text" name="cell" style="width:150px;" id="cell">
+          </td>
+        </tr>
+
+        <tr>
+          <td>姓&nbsp;&nbsp;&nbsp;&nbsp;名：</td>
+          <td id="name_txt"></td>
+        </tr>
+
+        <tr>
+          <td>组&nbsp;&nbsp;&nbsp;&nbsp;织：</td>
+          <td id="org_txt"></td>
+        </tr>
+
+        <tr>
+          <td>岗&nbsp;&nbsp;&nbsp;&nbsp;位：</td>
+          <td id="poz_txt"></td>
+        </tr>
+
+        <tr>
+          <td>岗位状态：</td>
+          <td id="poz_state"></td>
+        </tr>
+
+        <tr style="display:none;">
+          <td>数据权限：</td>
+          <td colspan="2">
+            <label style="float:left; width:50px;">
+              <input type="radio" name="c1" checked="checked" disabled="disabled" value="yes">无</label>
+          </td>
+          <td>
+          </td>
+        </tr>
+
+        <tr style="display:none;">
+          <td>菜单权限：</td>
+          <td colspan="2">
+            <label style="float:left; width:50px;">
+              <input type="radio" name="ck" checked="checked" disabled="disabled" value="yes">首页</label>
+          </td>
+          <td>
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pl30 pt20 layout-form">
+    <table id="personRoleEdit" class="personRoleEdit form-table">
+      <tbody>
+        <tr>
+          <td width="70">手机号码：</td>
+          <td>
+            <input type="text" name="cell" style="width:222px;" id="cell" maxlength="15">
+          </td>
+        </tr>
+        <tr>
+          <td>姓　　名：</td>
+          <td>
+            <input type="text" name="name" style="width:222px;" id="name" maxlength="6">
+          </td>
+        </tr>
+        <tr>
+          <td>岗　　位：</td>
+          <td>
+            <select id="postionId" name="postionId" style="width:222px;">
+            </select>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <form id="developerForm" method="post">
+    <div class="layout-form p15">
+      <table border="0" cellspacing="0" cellpadding="0" class="form-table">
+        <tbody>
+          <tr>
+            <td>名称：
+              <span class="red">*</span>
+            </td>
+            <td style="padding-right: 22px;">
+              <input type="text" class="w200" id="developerName" name="name" maxlength="30" value="" tip="名称未填写" reg="Required">
+            </td>
+            <td>简称：</td>
+            <td>
+              <input type="text" class="w200" name="abbreviation" maxlength="30" value="">
+            </td>
+          </tr>
+          <tr>
+            <td>繁体名称：</td>
+            <td>
+              <label id="tradName"></label>
+              <input type="hidden" value="" name="tradName">
+            </td>
+            <td>来源</td>
+            <td>
+              <select id="propertySel" name="source" class="w200" tip="性质未选择" reg="Required">
+                <option value="">请选择</option>
+                <option value="AC">案场</option>
+                <option value="LPZD">楼盘字典</option>
+                <option value="QT">其他</option>
+              </select>
+            </td>
+          </tr>
+
+          <!-- 新增 -->
+          <tr>
+            <td>是否一般纳税人：</td>
+            <td>
+              <select id="isTaxpayer" name="isTaxpayer" class="w200">
+                <option value="" selected="">无</option>
+                <option value="Y">是</option>
+                <option value="N">否</option>
+              </select>
+            </td>
+            <td>是否上市公司：</td>
+            <td>
+              <select id="listedType" name="listedType" class="w200">
+                <option value="" selected="">无</option>
+                <option value="LISTED">是</option>
+                <option value="NOT_LISTED">否</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td>联系人：</td>
+            <td>
+              <input type="text" class="w200" id="contactName" name="contactName" maxlength="30" value="">
+            </td>
+            <td>联系电话：</td>
+            <td>
+              <input type="text" class="w200" id="contactCell" name="contactCell" maxlength="30" value="">
+            </td>
+          </tr>
+          <tr>
+            <td>地址：</td>
+            <td colspan="3">
+              <input type="text" style="width: 500px" id="contactAddress" name="contactAddress" maxlength="60" value="">
+            </td>
+          </tr>
+          <tr>
+            <td>纳税人识别号：</td>
+            <td>
+              <input type="text" class="w200" id="taxpayerNumber" name="taxpayerNumber" maxlength="100" value="">
+            </td>
+            <td>税率（%）：</td>
+            <td>
+              <input type="text" class="w200" id="taxRate" name="taxRate" maxlength="8" value="">
+            </td>
+
+          </tr>
+          <tr>
+            <td>账户：</td>
+            <td>
+              <input type="text" class="w200" id="accountNumber" name="accountNumber" maxlength="30" value="">
+            </td>
+            <td>开户行：</td>
+            <td>
+              <input type="text" class="w200" id="accountBank" name="accountBank" maxlength="100" value="">
+            </td>
+          </tr>
+          <tr>
+            <td>是否失效：</td>
+            <td>
+              <select name="isDisabled" class="w200">
+                <option value="" selected="">无</option>
+                <option value="Y">是</option>
+                <option value="N">否</option>
+              </select>
+            </td>
+            <td>失效日期：</td>
+            <td>
+              <input type="text" class="dateInput" style="width: 200px;" id="" name="" maxlength="100" value=""
+                onclick="WdatePicker({isShowOthers:false,dateFmt:'yyyy-MM-dd HH:mm:ss'});">
+            </td>
+          </tr>
+          <tr>
+            <td valign="top">备注：</td>
+            <td colspan="3">
+              <textarea style="width: 500px;" rows="4" cols="60" name="remark" maxlength="200"></textarea>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </form>
+  <div class="p15">
+    <form id="dataImportForm" method="post" enctype="multipart/form-data">
+
+
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tbody>
+          <tr>
+            <td>
+              <span style="color:red">*</span>选择文件：
+            </td>
+            <td>
+              <input type="file" id="fileName" name="fileName" style="border:1px solid #d5d5d5; padding:2px">
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </form>
+  </div>
+  <form id="createForm">
+    <input type="hidden" name="id" value="">
+    <input type="hidden" name="_city" value="SHENZHEN">
+    <div class="layout-form p15 ">
+      <table border="0" cellspacing="0" cellpadding="0" class="ltorTable w500">
+        <tbody>
+          <tr>
+            <th>城市
+              <span class="red">*</span>
+            </th>
+            <td colspan="3">深圳
+            </td>
+          </tr>
+          <tr>
+            <th>字典类型
+              <span class="red">*</span>
+            </th>
+            <td colspan="3">
+              <select id="dictionaryType" class="w150" name="dictionaryType" reg="Required" tip="请选择字典类型">
+                <option value="GARDEN">楼盘字典</option>
+                <option value="BUILDING">楼栋单元字典</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <th>数据来源
+              <span class="red">*</span>
+            </th>
+            <td colspan="3">
+              <select id="dataSource" class="w150" name="dataSource" reg="Required" tip="请选择数据来源">
+                <option value="GUOTO">国土</option>
+                <option value="SOUFANG">搜房</option>
+                <option value="ANJUKE">安居客</option>
+                <option value="LIANJIA">链家</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <th>外部系统名称
+              <span class="red">*</span>
+            </th>
+            <td>
+              <input name="externSystemName" type="text" class="w400" value="" reg="Required" tip="请输入外部系统名称" maxlength="100">
+            </td>
+          </tr>
+          <tr>
+            <th>建模楼盘
+              <span class="red">*</span>
+            </th>
+            <td>
+              <div class="f7 w">
+                <input type="text" id="garden" value="" reg="Required" tip="请选择建模楼盘" class="ui-autocomplete-input" autocomplete="off" role="textbox"
+                  aria-autocomplete="list" aria-haspopup="true">
+                <input type="hidden" id="gardenId" name="garden.id" value="">
+              </div>
+            </td>
+          </tr>
+          <tr id="buildingType" style="display:none">
+            <th>建模楼栋单元
+              <span class="red">*</span>
+            </th>
+            <td>
+              <div class="f7 w">
+                <input type="text" id="buildingName" value="" class="ui-autocomplete-input" autocomplete="off" role="textbox" aria-autocomplete="list"
+                  aria-haspopup="true">
+                <input type="hidden" id="buildingId" name="building.id" value="">
+              </div>
+            </td>
+
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+  </form>
+
+  <div>
+
+
+    <dl class="ckBox_l_r clearfix">
+      <dt class="ckBox_dt">
+        <label>
+          <input type="checkbox" class="checkallgroup" value="SCHOOL">
+          <b>教育机构：</b>
+        </label>
+      </dt>
+      <dd class="ckBox_dd clearfix">
+
+        <label>
+          <input type="checkbox" alias="幼儿园" value="KINDERGARTEN">
+          <span>幼儿园</span>
+        </label>
+
+
+        <label>
+          <input type="checkbox" alias="小学" value="PRIMARY_SCHOOL" checked="checked">
+          <span>小学</span>
+        </label>
+
+
+        <label>
+          <input type="checkbox" alias="初中" value="JUNIOR_SCHOOL" checked="checked">
+          <span>初中</span>
+        </label>
+
+
+        <label>
+          <input type="checkbox" alias="高中" value="HIGH_SCHOOL" checked="checked">
+          <span>高中</span>
+        </label>
+
+
+        <label>
+          <input type="checkbox" alias="大学" value="UNIVERSITY">
+          <span>大学</span>
+        </label>
+
+
+        <label>
+          <input type="checkbox" alias="特殊学校" value="SPECIAL_SCHOOL">
+          <span>特殊学校</span>
+        </label>
+
+
+        <label>
+          <input type="checkbox" alias="九年一贯" value="EW91_SCHOOL">
+          <span>九年一贯</span>
+        </label>
+
+
+        <label>
+          <input type="checkbox" alias="十二年一贯" value="EW121_SCHOOL">
+          <span>十二年一贯</span>
+        </label>
+
+
+        <label>
+          <input type="checkbox" alias="完全中学" value="SECONDARY_SCHOOL">
+          <span>完全中学</span>
+        </label>
+
+
+      </dd>
+    </dl>
+    <dl class="ckBox_l_r clearfix">
+      <dt class="ckBox_dt">
+        <label>
+          <input type="checkbox" class="checkallgroup" value="VEHICLE">
+          <b>交通设施：</b>
+        </label>
+      </dt>
+      <dd class="ckBox_dd clearfix">
+        <label>
+          <input type="checkbox" alias="公交站" value="BUS">
+          <span>公交站</span>
+        </label>
+        <label>
+          <input type="checkbox" alias="地铁站" value="METRO">
+          <span>地铁站</span>
+        </label>
+        <label>
+          <input type="checkbox" alias="汽车站" value="CARSTATION">
+          <span>汽车站</span>
+        </label>
+        <label>
+          <input type="checkbox" alias="火车站" value="RAILWAYSTATION">
+          <span>火车站</span>
+        </label>
+
+      </dd>
+    </dl>
+    <dl class="ckBox_l_r clearfix">
+      <dt class="ckBox_dt">
+        <label>
+          <input type="checkbox" class="checkallgroup" value="MEDICAL_FACILITIES">
+          <b>医疗设施：</b>
+        </label>
+      </dt>
+      <dd class="ckBox_dd clearfix">
+        <label>
+          <input type="checkbox" alias="医院" value="HOSPITAL">
+          <span>医院</span>
+        </label>
+        <label>
+          <input type="checkbox" alias="药店" value="PHARMACY">
+          <span>药店</span>
+        </label>
+
+      </dd>
+    </dl>
+    <dl class="ckBox_l_r clearfix">
+      <dt class="ckBox_dt">
+        <label>
+          <input type="checkbox" class="checkallgroup" value="AVERSION_FACILITIES">
+          <b>嫌恶设施：</b>
+        </label>
+      </dt>
+      <dd class="ckBox_dd clearfix">
+        <label>
+          <input type="checkbox" alias="工厂" value="FACTORY">
+          <span>工厂</span>
+        </label>
+        <label>
+          <input type="checkbox" alias="加油站" value="GAS_STATION">
+          <span>加油站</span>
+        </label>
+        <label>
+          <input type="checkbox" alias="飞机场" value="AIRPORT">
+          <span>飞机场</span>
+        </label>
+        <label>
+          <input type="checkbox" alias="墓地陵园" value="CEMETERY">
+          <span>墓地陵园</span>
+        </label>
+
+      </dd>
+    </dl>
+    <dl class="ckBox_l_r clearfix">
+      <dt class="ckBox_dt">
+        <label>
+          <input type="checkbox" class="checkallgroup" value="LANDSCAPE">
+          <b>景观环境：</b>
+        </label>
+      </dt>
+      <dd class="ckBox_dd clearfix">
+        <label>
+          <input type="checkbox" alias="公园" value="PARK">
+          <span>公园</span>
+        </label>
+        <label>
+          <input type="checkbox" alias="动物园" value="ZOO">
+          <span>动物园</span>
+        </label>
+        <label>
+          <input type="checkbox" alias="博物馆" value="MUSEUM">
+          <span>博物馆</span>
+        </label>
+        <label>
+          <input type="checkbox" alias="名胜古迹" value="FAMOUSPLACE">
+          <span>名胜古迹</span>
+        </label>
+        <label>
+          <input type="checkbox" alias="风景区" value="SCENICSPOT">
+          <span>风景区</span>
+        </label>
+        <label>
+          <input type="checkbox" alias="植物园" value="BOTANICALGARDEN">
+          <span>植物园</span>
+        </label>
+        <label>
+          <input type="checkbox" alias="游乐园" value="PLEASUREGROUND">
+          <span>游乐园</span>
+        </label>
+
+      </dd>
+    </dl>
+    <dl class="ckBox_l_r clearfix">
+      <dt class="ckBox_dt">
+        <label>
+          <input type="checkbox" class="checkallgroup" value="MALLS_SUPERMARKET">
+          <b>商场超市：</b>
+        </label>
+      </dt>
+      <dd class="ckBox_dd clearfix">
+        <label>
+          <input type="checkbox" alias="超市" value="SUPERMARKET">
+          <span>超市</span>
+        </label>
+        <label>
+          <input type="checkbox" alias="商场" value="MALL">
+          <span>商场</span>
+        </label>
+        <label>
+          <input type="checkbox" alias="便利店" value="CONVENIENCE_STORE">
+          <span>便利店</span>
+        </label>
+        <label>
+          <input type="checkbox" alias="ATM" value="ATM">
+          <span>ATM</span>
+        </label>
+        <label>
+          <input type="checkbox" alias="银行" value="BANK">
+          <span>银行</span>
+        </label>
+
+      </dd>
+    </dl>
+    <dl class="ckBox_l_r clearfix">
+      <dt class="ckBox_dt">
+        <label>
+          <input type="checkbox" class="checkallgroup" value="CATERING_ENTERTAINMENT">
+          <b>餐饮娱乐：</b>
+        </label>
+      </dt>
+      <dd class="ckBox_dd clearfix">
+        <label>
+          <input type="checkbox" alias="餐馆" value="RESTAURANT">
+          <span>餐馆</span>
+        </label>
+        <label>
+          <input type="checkbox" alias="酒店" value="HOTEL">
+          <span>酒店</span>
+        </label>
+        <label>
+          <input type="checkbox" alias="KTV" value="KTV">
+          <span>KTV</span>
+        </label>
+        <label>
+          <input type="checkbox" alias="酒吧" value="PUB">
+          <span>酒吧</span>
+        </label>
+        <label>
+          <input type="checkbox" alias="电影院" value="MOVIE">
+          <span>电影院</span>
+        </label>
+        <label>
+          <input type="checkbox" alias="咖啡厅" value="CAFE">
+          <span>咖啡厅</span>
+        </label>
+
+      </dd>
+    </dl>
+    <dl class="ckBox_l_r clearfix">
+      <dt class="ckBox_dt">
+        <label>
+          <input type="checkbox" class="checkallgroup" value="OTHER">
+          <b>其他：</b>
+        </label>
+      </dt>
+      <dd class="ckBox_dd clearfix">
+        <label>
+          <input type="checkbox" alias="停车场" value="PARKINGLOT">
+          <span>停车场</span>
+        </label>
+
+      </dd>
+    </dl>
+  </div>
+
+  <div class="layout-form p15 ">
+    <table border="0" cellspacing="0" cellpadding="0" class="ltorTable w600">
+      <tbody>
+        <tr>
+          <th>城市
+            <span class="red">*</span>
+          </th>
+          <td colspan="3">
+            <div class="l-text-wrapper">
+              <div class="l-text l-text-combobox" style="width: 180px;">
+                <input type="text" id="citySelect" class="w250 fl l-text-field" reg="Required" readonly="" ligeruiid="citySelect" style="width: 160px;">
+                <label class="l-text-label">请选择</label>
+                <div class="l-text-l"></div>
+                <div class="l-text-r"></div>
+                <div class="l-trigger">
+                  <div class="l-trigger-icon"></div>
+                </div>
+                <div class="l-trigger l-trigger-cancel" style="display: none;">
+                  <div class="l-trigger-icon"></div>
+                </div>
+              </div>
+              <div class="l-box-select" style="display: none; width: 180px;">
+                <div class="l-box-select-inner">
+                  <table cellpadding="0" cellspacing="0" border="0" class="l-box-select-table l-table-nocheckbox"></table>
+                </div>
+              </div>
+              <input type="hidden" name="cityId" id="cityId" data-ligerid="citySelect" value="">
+            </div>&nbsp;&nbsp;&nbsp;
+            <label class="color_red">avg P=楼盘批次Q房价</label>
+          </td>
+        </tr>
+        <tr>
+          <th width="80">基准楼层
+            <span class="red">*</span>
+          </th>
+          <td width="210">
+            总楼层/2 +
+            <input name="baseFloor" type="text" class="w120" value="" tip="请输入基准楼层且为数字" reg="number" maxlength="4">
+          </td>
+          <th width="80">楼层差比
+            <span class="red">*</span>
+          </th>
+          <td width="210">
+            <input name="floorCoefficient" type="text" class="w100" value="" tip="请输入楼层差比" reg="Float" maxnumber="100" maxlength="8">% &nbsp;&nbsp;
+            <label class="color_red">X</label>&nbsp;&nbsp; avg P
+          </td>
+        </tr>
+        <tr>
+          <th width="80">基准朝向
+            <span class="red">*</span>
+          </th>
+          <td width="210">
+            <select id="baseDirection" name="baseDirection" class="w180" reg="Required" tip="请选择基准朝向">
+              <option value="">选择朝向</option>
+              <option value="NORTHSOUTH">南北</option>
+              <option value="SOUTH">南</option>
+              <option value="SOUTHEAST">东南</option>
+              <option value="SOUTHWEST">西南</option>
+              <option value="WESTEAST">东西</option>
+              <option value="EAST">东</option>
+              <option value="NORTHEAST">东北</option>
+              <option value="WEST">西</option>
+              <option value="NORTHWEST">西北</option>
+              <option value="NORTH">北</option>
+            </select>
+          </td>
+          <th width="80">朝向差比
+            <span class="red">*</span>
+          </th>
+          <td width="210">
+            <input name="directionCoefficient" type="text" class="w100" value="" tip="请输入朝向差比" reg="Float" maxnumber="100" maxlength="8">% &nbsp;&nbsp;
+            <label class="color_red">X</label>&nbsp;&nbsp; avg P
+          </td>
+        </tr>
+        <tr>
+          <th width="80">基准面积
+            <span class="red">*</span>
+          </th>
+          <td width="210">
+            <input name="baseArea" type="text" class="w50" value="" tip="请输入基准面积且为数字" reg="Float">(平米)&nbsp; 至 &nbsp;
+            <input name="baseMaxArea" type="text" class="w50" value="" tip="请输入基准面积且为数字" reg="Float">(平米)
+          </td>
+          <th width="80">面积差比
+            <span class="red">*</span>
+          </th>
+          <td width="210">
+            <input name="areaCoefficient" type="text" class="w100" value="" tip="请输入面积差比" reg="Float" maxnumber="100" maxlength="8">% &nbsp;&nbsp;
+            <label class="color_red">X</label>&nbsp;&nbsp; avg P
+          </td>
+        </tr>
+        <tr>
+          <td colspan="4" class="fb">楼盘POI系数</td>
+        </tr>
+        <tr>
+          <th width="80">教育差比
+            <span class="red">*</span>
+          </th>
+          <td width="210">
+            <input name="schoolCoefficient" type="text" class="w100" value="" tip="请输入教育差比" reg="Float" maxnumber="100" maxlength="8">% &nbsp;&nbsp;
+            <label class="color_red">X</label>&nbsp;&nbsp; avg P
+          </td>
+          <th width="80">交通差比
+            <span class="red">*</span>
+          </th>
+          <td width="210">
+            <input name="vehicleCoefficient" type="text" class="w100" value="" tip="请输入交通差比" reg="Float" maxnumber="100" maxlength="8">% &nbsp;&nbsp;
+            <label class="color_red">X</label>&nbsp;&nbsp; avg P
+          </td>
+        </tr>
+        <tr>
+          <th width="80">嫌恶差比
+            <span class="red">*</span>
+          </th>
+          <td width="210">
+            <input name="aversionCoefficient" type="text" class="w100" value="" tip="请输入嫌恶差比" reg="Float" maxnumber="100" maxlength="8">% &nbsp;&nbsp;
+            <label class="color_red">X</label>&nbsp;&nbsp; avg P
+          </td>
+          <th width="80">医疗差比
+            <span class="red">*</span>
+          </th>
+          <td width="210">
+            <input name="medicalCoefficient" type="text" class="w100" value="" tip="请输入医疗差比" reg="Float">% &nbsp;&nbsp;
+            <label class="color_red">X</label>&nbsp;&nbsp; avg P
+          </td>
+        </tr>
+        <tr>
+          <th width="80">商超差比
+            <span class="red">*</span>
+          </th>
+          <td width="210">
+            <input name="supermarketCoefficient" type="text" class="w100" value="" tip="请输入商超差比" reg="Float" maxnumber="100" maxlength="8">% &nbsp;&nbsp;
+            <label class="color_red">X</label>&nbsp;&nbsp; avg P
+          </td>
+          <th width="80">餐饮差比
+            <span class="red">*</span>
+          </th>
+          <td width="210">
+            <input name="cateringCoefficient" type="text" class="w100" value="" tip="请输入餐饮差比" reg="Float" maxnumber="100" maxlength="8">% &nbsp;&nbsp;
+            <label class="color_red">X</label>&nbsp;&nbsp; avg P
+          </td>
+        </tr>
+        <tr>
+          <th width="80">景观差比
+            <span class="red">*</span>
+          </th>
+          <td width="210">
+            <input name="landscapeCoefficient" type="text" class="w100" value="" tip="请输入景观差比" reg="Float">% &nbsp;&nbsp;
+            <label class="color_red">X</label>&nbsp;&nbsp; avg P
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+
+</body>
+
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>新增人员</title>
+  <link href="http://192.168.0.42/resource/cloud/css/global/base.css?v=20141111" rel="stylesheet" type="text/css" />
+  <link href="http://192.168.0.42/resource/cloud/css/global/widgets.css?v=20141111" rel="stylesheet" type="text/css" />
+  <link href="http://192.168.0.42/resource/cloud/css/global/button.css?v=20141111" rel="stylesheet" type="text/css" />
+  <link href="http://192.168.0.42/resource/cloud/css/module/table_inquiry.css?v=20141111" rel="stylesheet" type="text/css"
+  />
+  <link href="http://192.168.0.42/resource/cloud/css/global/table.css?v=20141111" rel="stylesheet" type="text/css" />
+
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/toast.css">
+  <!-- <link rel="stylesheet" href="./WdatePicker.css"> -->
+  <link rel="stylesheet" href="./index.css">
+  <script type="text/javascript" src="../../components/common/vue.js"></script>
+  <style>
+    [v-cloak] {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <form id="vm" method="post">
+    <div class="layout-form pt10">
+      <div class="title-item">基础资料</div>
+      <div class="flexbox p10">
+        <div class="flexbox flex-dic-cl">
+          <div class="flexbox pb20">
+            <div class="flexbox flex-al-tc pr30">
+              <p class="w40">公司:</p>
+              <select v-model="user.company.id" id="" name="" class="w100" tip="性质未选择" reg="Required">
+                <option value="">请选择</option>
+                <option v-for="item in companyList" :value="item.id">{{item.name}}</option>
+              </select>
+            </div>
+            <div class="flexbox flex-al-tc pr30">
+              <p class="w40">电话:</p>
+              <input v-model="user.phone" @keyup="getName" class="w100" type="text" maxlength="11">
+
+            </div>
+            <div class="flexbox flex-al-tc pr30">
+              <p class="w90 flexbox flex-jc-fe pr10">身份证/护照号:</p>
+              <input v-model="passPortIdCardNum" class="w160" type="text" maxlength="18">
+            </div>
+            <div class="flexbox flex-al-tc pr30">
+              <p class="w40">姓名:</p>
+              <input v-model="user.name" class="w100" type="text" disabled>
+            </div>
+          </div>
+          <div class="flexbox pb20">
+            <div class="flexbox flex-al-tc pr30">
+              <p class="w40">岗位:</p>
+              <select v-model="user.position.id" id="" name="" class="w100" tip="性质未选择" reg="Required">
+                <option value="">请选择</option>
+                <option v-for="item in positionList" :value="item.id">{{item.name}}</option>
+              </select>
+            </div>
+            <div class="flexbox flex-al-tc pr30">
+              <p class="w40">学历:</p>
+              <select v-model="user.degree" id="" name="" class="w100" tip="性质未选择" reg="Required">
+                <option value="">请选择</option>
+                <option v-for="item in degreeList" :value="item.name">{{item.desc}}</option>
+              </select>
+            </div>
+            <div class="flexbox flex-al-tc pr30">
+              <p class="w90 flexbox flex-jc-fe pr10">入职日期:</p>
+              <input v-model="user.createTime" type="text" class="dateInput w160" id="" name="" maxlength="100" value="" onclick="WdatePicker({isShowOthers:false,dateFmt:'yyyy-MM-dd HH:mm:ss'});">
+            </div>
+            <div class="flexbox flex-al-tc pr30">
+              <p class="w40">状态:</p>
+              <select v-model="user.status" id="" name="" class="w100" tip="性质未选择" reg="Required">
+                <option value="">请选择</option>
+                <option v-for="item in statusList" :value="item.name">{{item.desc}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="flexbox">
+            <div class="flexbox flex-al-tc pr30">
+              <p class="w40">性别:</p>
+              <select v-model="user.sex" id="" name="" class="w100" tip="性质未选择" reg="Required">
+                <option value="">请选择</option>
+                <option v-for="item in sexList" :value="item.name">{{item.desc}}</option>
+              </select>
+            </div>
+            <div class="flexbox flex-al-tc pr30">
+              <p class="w40">民族:</p>
+              <input v-model="user.folk" class="w100" type="text">
+            </div>
+            <div class="flexbox flex-al-tc pr30">
+              <p class="w90 flexbox flex-jc-fe pr10">户口所在地:</p>
+              <input v-model="user.domicile" class="w330" type="text">
+            </div>
+          </div>
+        </div>
+        <div class="img-box">
+          <input class="btn-upload" type="file" name="file" accept="image/*" id="btnUpload" multiple="multiple">
+        </div>
+      </div>
+
+      <div class="title-item">证书信息</div>
+      <div class="p10 flexbox flex-dic-cl">
+
+        <div class="flexbox pb20">
+          <div class="flexbox flex-al-tc pr30">
+            <p class="w60">证书类型:</p>
+            <select v-model="user.certType" id="" name="" class="w130" tip="性质未选择" reg="Required">
+              <option value="">请选择</option>
+              <option v-for="item in certTypeList" :value="item.name">{{item.desc}}</option>
+            </select>
+          </div>
+          <div class="flexbox flex-al-tc pr30">
+            <p class="w60">注册号:</p>
+            <input v-model="user.certRegisterNum" class="w160" type="text">
+          </div>
+          <div class="flexbox flex-al-tc pr30">
+            <p class="w60 flexbox flex-jc-fe pr10">有效期:</p>
+            <input v-model="user.certValidTime" type="text" class="dateInput w160" id="" name="" maxlength="100" value="" onclick="WdatePicker({isShowOthers:false,dateFmt:'yyyy-MM-dd HH:mm:ss'});">
+          </div>
+          <div class="flexbox flex-al-tc pr30">
+            <p class="w60">是否有章:</p>
+            <select v-model="user.haveStamp" id="" name="" class="w140" tip="性质未选择" reg="Required">
+              <option value="">请选择</option>
+              <option value="1">是</option>
+              <option value="0">否</option>
+            </select>
+          </div>
+        </div>
+        <div class="flexbox pb20">
+          <div class="flexbox flex-al-tc pr30">
+            <p class="w60">证书编号:</p>
+            <input v-model="user.certNum" class="w130" type="text">
+          </div>
+          <div class="flexbox flex-al-tc pr30">
+            <p class="w60">密钥编码:</p>
+            <input v-model="user.certSecretNum" class="w160" type="text">
+          </div>
+          <div class="flexbox flex-al-tc pr30">
+            <p class="w60 flexbox flex-jc-fe pr10">密钥密码:</p>
+            <input v-model="user.punishmentNum" class="w160" type="text">
+          </div>
+          <div class="flexbox flex-al-tc pr30">
+            <p class="w60">处分次数:</p>
+            <input v-model="user.punishmentNum" class="w140" type="text">
+          </div>
+        </div>
+        <div class="flexbox pb20">
+          <div class="flexbox flex-al-tc pr30">
+            <p class="w60">证书附件:</p>
+            <input v-model="user.certAttachUrl" type="file" id="fileName" name="fileName">
+          </div>
+        </div>
+        <div class="flexbox">
+          <div class="flexbox flex-al-tc pr30">
+            <p class="w60">备 注:</p>
+            <input v-model="user.certRemark" class="w870" type="text" placeholder="描述处分情况">
+          </div>
+        </div>
+      </div>
+      <div class="title-item">扩展信息</div>
+      <div class="p10 flexbox flex-dic-cl">
+        <div class="flexbox pb20">
+          <div class="flexbox flex-al-tc pr30">
+            <p class="w70">紧急联系人:</p>
+            <input v-model="user.sosPersonName" class="w140" type="text">
+          </div>
+          <div class="flexbox flex-al-tc pr30">
+            <p class="w70">关 系:</p>
+            <input v-model="user.sosRelationship" class="w160" type="text" placeholder="朋友/家属">
+          </div>
+          <div class="flexbox flex-al-tc pr30">
+            <p class="w70 flexbox flex-jc-fe pr10">联系电话:</p>
+            <input v-model="user.sosPersonPhone" class="w160" type="text">
+          </div>
+
+        </div>
+        <div class="flexbox pb20">
+          <div class="flexbox flex-al-tc pr30">
+            <p class="w70">开户银行:</p>
+            <input v-model="user.openAccountBank" class="w140" type="text">
+          </div>
+          <div class="flexbox flex-al-tc pr30">
+            <p class="w70">银行账号:</p>
+            <input v-model="user.openAccountBankNum" class="w160" type="text">
+          </div>
+          <div class="flexbox flex-al-tc pr30">
+            <p class="w70 flexbox flex-jc-fe pr10">社保电脑号:</p>
+            <input v-model="user.socialSecurityNum" class="w160" type="text">
+          </div>
+          <div class="flexbox flex-al-tc pr30">
+            <p class="w60">开户城市:</p>
+            <input v-model="user.openAccountCity" class="w100" type="text">
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+  <script src="../../components/common/jquery-1.11.1.min.js"></script>
+  <script src="../../components/common/toast.js"></script>
+  <script src="./WdatePicker.js"></script>
+  <script src="./index.js"></script>
+</body>
+
+</html>
