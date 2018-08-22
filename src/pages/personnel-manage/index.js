@@ -1,5 +1,10 @@
 $(function () {
+
+  var id;
+  var pageType;
+
   var data = {
+    disabled: false,
     // "companyList": [ //公司
     //   {
     //     "id": "公司id",
@@ -95,19 +100,31 @@ $(function () {
     },
     mounted() {
       this.init();
+      // pageType  "view" "create" "edit" 打开状态
+      if (pageType === 'view') {
+        this.disabled = true;
+      }
     },
     methods: {
       init() {
         var that = this;
-        this.ajax('/qfang-dictionary/assess/user/info.json', null, function (res) {
+        var data = null;
+        console.log(id)
+        if (id) {
+          data.id = id;
+        }
+        this.ajax('/qfang-dictionary/assess/user/info.json', data, function (res) {
           if (res.data) {
-            console.log(res);
+            // console.log(res);
             that.companyList = res.data.companyList;
             that.positionList = res.data.positionList;
             that.degreeList = res.data.degreeList;
             that.statusList = res.data.statusList;
             that.sexList = res.data.sexList;
             that.certTypeList = res.data.certTypeList;
+            if (data != null) {
+              that.user = res.data.user;
+            }
           }
         });
       },
@@ -135,6 +152,32 @@ $(function () {
         }
         this.user.phone = event.target.value;
       },
+      // 上传图片
+      uploadImg(e) {
+        // console.log(e.target.files);
+        var files = e.target.files || e.dataTransfer.files;
+        if (!files.length) {
+          return;
+        }
+        this.createImage(files[0]);
+
+      },
+      createImage(file) {
+        console.log(file)
+        var image = new Image();
+        var reader = new FileReader();
+        var that = this;
+
+        reader.onload = (e) => {
+          console.log(e.target.result);
+          that.user.photoUrl = e.target.result;
+        };
+        // reader.readAsDataURL(file);
+        console.log(that.user.photoUrl);
+
+      },
+
+
       ajax(url, data, callback) {
         var that = this;
         $.ajax({
@@ -157,34 +200,34 @@ $(function () {
         });
       },
 
-      ajaxPromise(url, data, callback) {
-        var that = this;
-        var p = new Promise(function (resolve, reject) {
-          $.ajax({
-            url: url,
-            type: data == null ? 'GET' : 'POST',
-            dataType: "json",
-            data: data == null ? '' : JSON.parse(JSON.stringify(data)),
-            async: false,
-            // contentType: "application/json",
-            success: function (resp) {
-              callback(resp);
-              if (resp && resp.status) {
-                that.show(resp.errors[0].errorDesc);
-                resolve(false);
-              } else {
-                resolve(true);
-              }
-            },
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-              console.log(XMLHttpRequest);
-              reject(false);
-              that.show('服务器出问题');
-            }
-          });
-        });
-        return p;
-      },
+      // ajaxPromise(url, data, callback) {
+      //   var that = this;
+      //   var p = new Promise(function (resolve, reject) {
+      //     $.ajax({
+      //       url: url,
+      //       type: data == null ? 'GET' : 'POST',
+      //       dataType: "json",
+      //       data: data == null ? '' : JSON.parse(JSON.stringify(data)),
+      //       async: false,
+      //       // contentType: "application/json",
+      //       success: function (resp) {
+      //         callback(resp);
+      //         if (resp && resp.status) {
+      //           that.show(resp.errors[0].errorDesc);
+      //           resolve(false);
+      //         } else {
+      //           resolve(true);
+      //         }
+      //       },
+      //       error: function (XMLHttpRequest, textStatus, errorThrown) {
+      //         console.log(XMLHttpRequest);
+      //         reject(false);
+      //         that.show('服务器出问题');
+      //       }
+      //     });
+      //   });
+      //   return p;
+      // },
 
 
       show(content, duration, isCenter, animateIn, animateOut) {

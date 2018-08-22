@@ -40,16 +40,16 @@
             </div>
             <div class="flexbox flex-al-tc pr30">
               <p class="w40">电话:</p>
-              <input v-model="user.phone" @keyup="getName" class="w100" type="text" maxlength="11">
+              <input :disabled="disabled" v-model="user.phone" @keyup="getName" class="w100" type="text" maxlength="11">
 
             </div>
             <div class="flexbox flex-al-tc pr30">
               <p class="w90 flexbox flex-jc-fe pr10">身份证/护照号:</p>
-              <input v-model="passPortIdCardNum" class="w160" type="text" maxlength="18">
+              <input :disabled="disabled" v-model="passPortIdCardNum" class="w160" type="text" maxlength="18">
             </div>
             <div class="flexbox flex-al-tc pr30">
               <p class="w40">姓名:</p>
-              <input v-model="user.name" class="w100" type="text" disabled>
+              <input :disabled="disabled" v-model="user.name" class="w100" type="text" disabled>
             </div>
           </div>
           <div class="flexbox pb20">
@@ -69,7 +69,7 @@
             </div>
             <div class="flexbox flex-al-tc pr30">
               <p class="w90 flexbox flex-jc-fe pr10">入职日期:</p>
-              <input v-model="user.createTime" type="text" class="dateInput w160" id="" name="" maxlength="100" value="" onclick="WdatePicker({isShowOthers:false,dateFmt:'yyyy-MM-dd HH:mm:ss'});">
+              <input :disabled="disabled" v-model="user.createTime" type="text" class="dateInput w160" id="" name="" maxlength="100" value="" onclick="WdatePicker({isShowOthers:false,dateFmt:'yyyy-MM-dd HH:mm:ss'});">
             </div>
             <div class="flexbox flex-al-tc pr30">
               <p class="w40">状态:</p>
@@ -89,16 +89,17 @@
             </div>
             <div class="flexbox flex-al-tc pr30">
               <p class="w40">民族:</p>
-              <input v-model="user.folk" class="w100" type="text">
+              <input :disabled="disabled" v-model="user.folk" class="w100" type="text">
             </div>
             <div class="flexbox flex-al-tc pr30">
               <p class="w90 flexbox flex-jc-fe pr10">户口所在地:</p>
-              <input v-model="user.domicile" class="w330" type="text">
+              <input :disabled="disabled" v-model="user.domicile" class="w330" type="text">
             </div>
           </div>
         </div>
         <div class="img-box">
-          <input class="btn-upload" type="file" name="file" accept="image/*" id="btnUpload" multiple="multiple">
+          <input :disabled="disabled" v-model="user.photoUrl" class="btn-upload" @change="uploadImg" type="file" name="file" accept="image/*" id="btnUpload" multiple="multiple">
+          <img v-if="user.photoUrl" :src="user.photoUrl" class="img-label" />
         </div>
       </div>
 
@@ -115,11 +116,11 @@
           </div>
           <div class="flexbox flex-al-tc pr30">
             <p class="w60">注册号:</p>
-            <input v-model="user.certRegisterNum" class="w160" type="text">
+            <input :disabled="disabled" v-model="user.certRegisterNum" class="w160" type="text">
           </div>
           <div class="flexbox flex-al-tc pr30">
             <p class="w60 flexbox flex-jc-fe pr10">有效期:</p>
-            <input v-model="user.certValidTime" type="text" class="dateInput w160" id="" name="" maxlength="100" value="" onclick="WdatePicker({isShowOthers:false,dateFmt:'yyyy-MM-dd HH:mm:ss'});">
+            <input :disabled="disabled" v-model="user.certValidTime" type="text" class="dateInput w160" id="" name="" maxlength="100" value="" onclick="WdatePicker({isShowOthers:false,dateFmt:'yyyy-MM-dd HH:mm:ss'});">
           </div>
           <div class="flexbox flex-al-tc pr30">
             <p class="w60">是否有章:</p>
@@ -133,31 +134,31 @@
         <div class="flexbox pb20">
           <div class="flexbox flex-al-tc pr30">
             <p class="w60">证书编号:</p>
-            <input v-model="user.certNum" class="w130" type="text">
+            <input :disabled="disabled" v-model="user.certNum" class="w130" type="text">
           </div>
           <div class="flexbox flex-al-tc pr30">
             <p class="w60">密钥编码:</p>
-            <input v-model="user.certSecretNum" class="w160" type="text">
+            <input :disabled="disabled" v-model="user.certSecretNum" class="w160" type="text">
           </div>
           <div class="flexbox flex-al-tc pr30">
             <p class="w60 flexbox flex-jc-fe pr10">密钥密码:</p>
-            <input v-model="user.punishmentNum" class="w160" type="text">
+            <input :disabled="disabled" v-model="user.punishmentNum" class="w160" type="text">
           </div>
           <div class="flexbox flex-al-tc pr30">
             <p class="w60">处分次数:</p>
-            <input v-model="user.punishmentNum" class="w140" type="text">
+            <input :disabled="disabled" v-model="user.punishmentNum" class="w140" type="text">
           </div>
         </div>
         <div class="flexbox pb20">
           <div class="flexbox flex-al-tc pr30">
             <p class="w60">证书附件:</p>
-            <input v-model="user.certAttachUrl" type="file" id="fileName" name="fileName">
+            <input :disabled="disabled" v-model="user.certAttachUrl" type="file" id="fileName" name="fileName">
           </div>
         </div>
         <div class="flexbox">
           <div class="flexbox flex-al-tc pr30">
             <p class="w60">备 注:</p>
-            <input v-model="user.certRemark" class="w870" type="text" placeholder="描述处分情况">
+            <input :disabled="disabled" v-model="user.certRemark" class="w870" type="text" placeholder="描述处分情况">
           </div>
         </div>
       </div>
@@ -166,34 +167,34 @@
         <div class="flexbox pb20">
           <div class="flexbox flex-al-tc pr30">
             <p class="w70">紧急联系人:</p>
-            <input v-model="user.sosPersonName" class="w140" type="text">
+            <input :disabled="disabled" v-model="user.sosPersonName" class="w140" type="text">
           </div>
           <div class="flexbox flex-al-tc pr30">
             <p class="w70">关 系:</p>
-            <input v-model="user.sosRelationship" class="w160" type="text" placeholder="朋友/家属">
+            <input :disabled="disabled" v-model="user.sosRelationship" class="w160" type="text" placeholder="朋友/家属">
           </div>
           <div class="flexbox flex-al-tc pr30">
             <p class="w70 flexbox flex-jc-fe pr10">联系电话:</p>
-            <input v-model="user.sosPersonPhone" class="w160" type="text">
+            <input :disabled="disabled" v-model="user.sosPersonPhone" class="w160" type="text">
           </div>
 
         </div>
         <div class="flexbox pb20">
           <div class="flexbox flex-al-tc pr30">
             <p class="w70">开户银行:</p>
-            <input v-model="user.openAccountBank" class="w140" type="text">
+            <input :disabled="disabled" v-model="user.openAccountBank" class="w140" type="text">
           </div>
           <div class="flexbox flex-al-tc pr30">
             <p class="w70">银行账号:</p>
-            <input v-model="user.openAccountBankNum" class="w160" type="text">
+            <input :disabled="disabled" v-model="user.openAccountBankNum" class="w160" type="text">
           </div>
           <div class="flexbox flex-al-tc pr30">
             <p class="w70 flexbox flex-jc-fe pr10">社保电脑号:</p>
-            <input v-model="user.socialSecurityNum" class="w160" type="text">
+            <input :disabled="disabled" v-model="user.socialSecurityNum" class="w160" type="text">
           </div>
           <div class="flexbox flex-al-tc pr30">
             <p class="w60">开户城市:</p>
-            <input v-model="user.openAccountCity" class="w100" type="text">
+            <input :disabled="disabled" v-model="user.openAccountCity" class="w100" type="text">
           </div>
         </div>
       </div>
