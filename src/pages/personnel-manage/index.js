@@ -109,7 +109,6 @@ $(function () {
       init() {
         var that = this;
         var data = null;
-        console.log(id)
         if (id) {
           data.id = id;
         }
@@ -189,7 +188,7 @@ $(function () {
           // contentType: "application/json",
           success: function (resp) {
             if (resp && resp.status) {
-              that.show(resp.errors[0].errorDesc);
+              that.show(resp.errDesc);
             }
             callback(resp);
           },

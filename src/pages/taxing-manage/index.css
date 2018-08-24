@@ -1,0 +1,15 @@
+.ckBox_l_r .ckBox_dd label{
+  margin-right: 10px;
+}
+.mr60 {
+  margin-right: 60px !important;
+}
+.ckBox_l_r .ckBox_dd{
+  width: 725px;
+}
+.ckBox_l_r .ckBox_dd label{
+  width: 130px;
+}
+.ckBox_l_r{
+  border: 0;
+}

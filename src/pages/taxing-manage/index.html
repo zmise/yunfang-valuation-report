@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>税项管理</title>
+  <link href="http://192.168.0.42/resource/cloud/css/global/base.css?v=20141111" rel="stylesheet" type="text/css" />
+  <link href="http://192.168.0.42/resource/cloud/css/global/widgets.css?v=20141111" rel="stylesheet" type="text/css" />
+  <link href="http://192.168.0.42/resource/cloud/css/global/button.css?v=20141111" rel="stylesheet" type="text/css" />
+  <link href="http://192.168.0.42/resource/cloud/css/module/table_inquiry.css?v=20141111" rel="stylesheet" type="text/css"
+  />
+  <link href="http://192.168.0.42/resource/cloud/css/global/table.css?v=20141111" rel="stylesheet" type="text/css" />
+
+  <!-- <link href="http://192.168.0.42/resource/cloud/css/global/general.css?v=20141111" rel="stylesheet" type="text/css" /> -->
+  <link href="http://192.168.0.42/resource/cloud/css/module/cloud.css?v=20141111" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/toast.css">
+  <link rel="stylesheet" href="./index.css">
+  <script type="text/javascript" src="../../components/common/vue.js"></script>
+  <style>
+    [v-cloak] {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <form id="createForm" method="post">
+    <div class="layout-form pt10">
+      <div class="p10 flexbox flex-dic-cl">
+        <div class="flexbox">
+          <div class="flexbox flex-al-tc pr30">
+            <select v-model="loanConfig.city.id" @change="getCompany" id="" name="" class="w120" tip="" reg="">
+              <option value="">城市</option>
+              <option v-for="item in cityList" :value="item.id">{{item.name}}</option>
+            </select>
+          </div>
+          <div class="flexbox flex-al-tc pr30">
+            <select v-model="loanConfig.company.id" id="" name="" class="w140" tip="" reg="">
+              <option value="">归属银行</option>
+              <option v-for="item in companyList" :value="item.id">{{item.name}}</option>
+            </select>
+          </div>
+          <div class="flexbox flex-al-tc pr30">
+            <input :disabled="disabled" v-model="loanConfig.name" class="w160" type="text" placeholder="贷款类型名称">
+          </div>
+          <div class="flexbox flex-al-tc pr30">
+            <select v-model="loanConfig.propertyType" id="" name="" class="w100" tip="" reg="">
+              <option value="">面向用途</option>
+              <option v-for="item in propertyTypeList" :value="item.name">{{item.desc}}</option>
+            </select>
+          </div>
+          <div class="flexbox flex-al-tc">
+            <select v-model="loanConfig.status" id="" name="" class="w90" tip="" reg="">
+              <option value="1">启用</option>
+              <option value="0">禁用</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="title-item">税费计算项</div>
+      <div class="flexbox">
+        <dl class="ckBox_l_r clearfix">
+          <dd class="ckBox_dd clearfix">
+            <label class="mr60">
+              <input :disabled="disabled" v-model="loanConfig.taxStatusIncrement" type="checkbox" alias="增值税" value="1">
+              <span>增值税</span>
+            </label>
+            <label class="mr60">
+              <input :disabled="disabled" v-model="loanConfig.taxStatusCityBuild" type="checkbox" alias="城市维护建设税" value="1">
+              <span>城市维护建设税</span>
+            </label>
+            <label class="mr60">
+              <input :disabled="disabled" v-model="loanConfig.taxStatusEducation" type="checkbox" alias="教育附加税" value="1">
+              <span>教育附加税</span>
+            </label>
+            <label class="">
+              <input :disabled="disabled" v-model="loanConfig.taxStatusPersonal" type="checkbox" alias="个人所得税" value="1">
+              <span>个人所得税</span>
+            </label>
+            <label class="mr60">
+              <input :disabled="disabled" v-model="loanConfig.taxStatusCompany" type="checkbox" alias="企业所得税" value="1">
+              <span>企业所得税</span>
+            </label>
+            <label class="mr60">
+              <input :disabled="disabled" v-model="loanConfig.taxStatusTrade" type="checkbox" alias="交易手续费" value="1">
+              <span>交易手续费</span>
+            </label>
+            <label class="mr60">
+              <input :disabled="disabled" v-model="loanConfig.taxStatusDeed" type="checkbox" alias="契税" value="1">
+              <span>契税</span>
+            </label>
+            <label class="">
+              <input :disabled="disabled" v-model="loanConfig.taxStatusStamp" type="checkbox" alias="印花税" value="1">
+              <span>印花税</span>
+            </label>
+            <label class="mr60">
+              <input :disabled="disabled" v-model="loanConfig.taxStatusLand" type="checkbox" alias="土地增值税" value="1">
+              <span>土地增值税</span>
+            </label>
+            <label class="mr60">
+              <input :disabled="disabled" v-model="loanConfig.taxStatusAuction" type="checkbox" alias="拍卖费" value="1">
+              <span>拍卖费</span>
+            </label>
+            <label class="mr60">
+              <input :disabled="disabled" v-model="loanConfig.taxStatusLitigation" type="checkbox" alias="诉讼费" value="1">
+              <span>诉讼费</span>
+            </label>
+            <label class="">
+              <input :disabled="disabled" v-model="loanConfig.taxStatusTransferRegister" type="checkbox" alias="转移登记费" value="1">
+              <span>转移登记费 </span>
+            </label>
+            <label class="mr60">
+              <input :disabled="disabled" v-model="loanConfig.taxStatusFair" type="checkbox" alias="公正税" value="1">
+              <span>公正税 </span>
+            </label>
+          </dd>
+        </dl>
+      </div>
+
+    </div>
+  </form>
+  <input id="pageType" type="hidden" value="${pageType}" />
+
+  <script src="../../components/common/jquery-1.11.1.min.js"></script>
+  <script src="../../components/common/toast.js"></script>
+  <script src="./index.js"></script>
+</body>
+
+</html>
