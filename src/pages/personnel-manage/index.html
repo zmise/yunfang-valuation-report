@@ -200,7 +200,8 @@
       </div>
     </div>
   </form>
-  <input id="pageType" type="hidden" value="${pageType}" />
+  <input id="pageType" type="hidden" value="${pageType!''}" />
+  <input id="idInput" type="hidden" value="${id!''}" />
 
   <script src="../../components/common/jquery-1.11.1.min.js"></script>
   <script src="../../components/common/toast.js"></script>

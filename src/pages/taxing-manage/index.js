@@ -65,8 +65,10 @@ $(function () {
         var that = this;
         var data = null;
         if (id) {
-          data.id = id;
-        }
+          data = {
+              id: id,
+          }
+      }
         this.ajax('/qfang-dictionary/assess/loanConfig/info.json', data, function (res) {
           if (res.data) {
             // console.log(res);
@@ -75,6 +77,7 @@ $(function () {
 
             if (data != null) {
               that.loanConfig = res.data.loanConfig;
+              that.getCompany();
             }
           }
         });
@@ -200,3 +203,20 @@ $(function () {
   }
 
 });
+
+
+ // 参数转换
+ function transFormValue(obj) {
+  var param = {};
+  if (obj === null || obj === undefined || obj === "") return param;
+  for (var key in obj) {
+      if ($.type(obj[key]) === "Object") {
+          param[key] = dealObjectValue(obj[key]);
+      } else if (obj[key] === '0' || obj[key] === '1' || obj[key] === true || obj[key] === false) {
+          param[key] = Number(obj[key]);
+      } else {
+          param[key] = obj[key];
+      }
+  }
+  return param;
+};

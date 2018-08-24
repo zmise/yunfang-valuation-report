@@ -110,7 +110,9 @@ $(function () {
         var that = this;
         var data = null;
         if (id) {
-          data.id = id;
+          data = {
+            id: id,
+          }
         }
         this.ajax('/qfang-dictionary/assess/user/info.json', data, function (res) {
           if (res.data) {

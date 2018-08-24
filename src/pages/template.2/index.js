@@ -70,12 +70,8 @@
 //         });
 //     }
 // }
-
 $(function () {
-  var data = {
-    disabled: false,
-
-  };
+  var data = {};
 
   var vm = new Vue({
     el: '#createForm',
