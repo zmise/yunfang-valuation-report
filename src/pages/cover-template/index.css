@@ -1,0 +1,25 @@
+body{
+  height: 100%;
+  display: -webkit-flex;
+  display: flex;
+}
+
+.item{
+  width: 100%;
+  margin-bottom: 30px;
+
+}
+
+h1{
+  font-size: 40px;
+  padding: 100px 0;
+}
+.title{
+  font-size: 30px;
+}
+.content{
+  font-size: 20px;
+}
+.content span,.content div{
+  font-size: 20px
+}

@@ -78,3 +78,7 @@
 html,body{
   overflow-x: hidden;
 }
+
+.value-color{
+  color:#0000FF;
+}
