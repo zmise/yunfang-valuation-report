@@ -119,7 +119,7 @@
           </div>
           <!-- todo -->
           <div class="flexbox flex-al-tc box flex10">
-            <select :disabled="disabled" v-model="order.city.id" class="w90 ml20">
+            <select :disabled="disabled" v-model="order.city.id" class="w90 ml20" @change="initArea">
               <option value="">选择城市</option>
               <option v-for="item in cityList" :value="item.id">{{item.name}}</option>
             </select>
@@ -129,8 +129,9 @@
               <i>*</i>区域：</p>
           </div>
           <div class="flexbox flex-al-tc box flex10">
-            <select :disabled="disabled" v-model="order.area.id" class="w100 ml20">
+            <select :disabled="disabled" v-model="order.area.id" class="w100 ml20" @change="initGeo">
               <option value="">选择区域</option>
+              <option v-for="item in areaList" :value="item.id">{{item.name}}</option>
             </select>
           </div>
           <div class="flexbox flex-jc-fe flex-al-tc box flex8">
@@ -140,6 +141,7 @@
           <div class="flexbox flex-al-tc box flex10">
             <select :disabled="disabled" v-model="order.geographyArea.id" class="w100 ml20">
               <option value="">选择片区</option>
+              <option v-for="item in geoList" :value="item.id">{{item.name}}</option>
             </select>
           </div>
           <div class="flexbox flex-jc-fe flex-al-tc box flex12">
@@ -313,7 +315,7 @@
           </div>
           <div class="flexbox flex-al-tc box flex5">
             <select :disabled="disabled" v-model="order.propertyRightType" class="w125 ml10">
-              <option value="">个人产权</option>
+              <option value="">请选择产权类型</option>
               <option v-for="item in propertyRightTypeList" :value="item.name">{{item.desc}}</option>
             </select>
           </div>
@@ -631,8 +633,11 @@
         </div>
       </div>
     </div>
-  </form> <input :disabled="disabled" id="pageType" type="hidden" value="${pageType!''}" />
-  <input :disabled="disabled" id="idInput" type="hidden" value="${id!''}" />
+  </form>
+  <input id="pageType" type="hidden" value="${pageType!''}" />
+  <input id="idInput" type="hidden" value="${id!''}" />
+  <input id="cityIdInput" type="hidden" value="${cityId!''}" />
+  <input id="cityInput" type="hidden" value="${city!''}" />
 
   <script src="../../components/common/jquery-1.11.1.min.js"></script>
   <script src="../../components/common/toast.js"></script>

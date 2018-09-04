@@ -1,27 +1,26 @@
-// Package("com.qfang.dictionary.assess.user.assessUserCreate")
+// Package("com.qfang.dictionary.assess.order.assessOrderCreate")
 // var vm;
 // function show(content, duration, isCenter, animateIn, animateOut) {
-//     var animateIn = animateIn || 'fadeIn';
-//     var animateOut = animateOut || 'fadeOut';
-//     if (!content || !content.length) {
-//         return;
-//     }
-//     var duration = duration || 1000;
-//     var isCenter = isCenter || false;
-//     $('body').toast({
-//         position: 'absolute',
-//         animateIn: animateIn,
-//         animateOut: animateOut,
-//         content: content,
-//         duration: duration,
-//         isCenter: isCenter,
-//         padding: '0.2em 0.5em',
-//         background: 'rgba(181, 185, 190, 0.8)',
-//         borderRadius: '.31em',
-//         fontSize: '.24em',
-//         top: '0',
-//     });
-// }
+//   var animateIn = animateIn || 'fadeIn';
+//   var animateOut = animateOut || 'fadeOut';
+//   if (!content || !content.length) {
+//       return;
+//   }
+//   var duration = duration || 1000;
+//   var isCenter = isCenter || false;
+//   $('body').toast({
+//       position: 'absolute',
+//       animateIn: animateIn,
+//       animateOut: animateOut,
+//       content: content,
+//       duration: duration,
+//       isCenter: isCenter,
+//       padding: '0.2em 0.5em',
+//       background: 'rgba(181, 185, 190, 0.8)',
+//       borderRadius: '.31em',
+//       fontSize: '.24em',
+//       top: '0',
+//   });
 // function dealObjectValue(obj) {
 //     var param = {};
 //     if (obj === null || obj === undefined || obj === "") return param;
@@ -34,15 +33,15 @@
 //     }
 //     return param;
 // };
-// com.qfang.dictionary.assess.user.assessUserCreate = {
+// com.qfang.dictionary.assess.order.assessOrderCreate = {
 //     init: function () {
-//         window._cqdauauc = com.qfang.dictionary.assess.user.assessUserCreate;
+//         window._cqdauauc = com.qfang.dictionary.assess.order.assessOrderCreate;
 //     },
 //     save: function () {
-//         var data = vm.user;
+//         var data = vm.order;
 
 //         if (data.company.id == '') {
-//             show('请选择公司');
+//             vm.show('请选择公司');
 //             return;
 //         }
 
@@ -72,7 +71,14 @@
 // }
 
 $(function () {
+  // var id = $("#idInput").val() || '';
+  //   var pageType = $("#pageType").val() || '';
+  //   var cityId = $("#cityIdInput").val() || '';
+  //   var city = $("#cityInput").val() || '';
   var id;
+  var cityId;
+  var city;
+  var pageType;
 
   var data = {
     disabled: false,
@@ -321,6 +327,13 @@ $(function () {
     // }],
     // factPropertyTypeList:[],
 
+    // areaList: [{   //区域
+    //   id: 123,
+    //   name: '南山'
+    // }],
+    areaList: [],  //区域
+    geoList: [],  //片区
+
   };
 
   var vm = new Vue({
@@ -331,11 +344,18 @@ $(function () {
       init() {
         var that = this;
         var data = null;
-        if (id) {
-          data = {
-            id: id,
-          }
-        }
+        // if (id) {
+        //   data = {
+        //     id,
+        //     cityId,
+        //     city,
+        //   }
+        // } else {
+        //   data = {
+        //     cityId,
+        //     city,
+        //   }
+        // }
         this.ajax('/qfang-dictionary/assess/order/info.json', data, function (res) {
           if (res.data) {
             that.evaluationMethod = res.data.evaluationMethod;
@@ -361,6 +381,47 @@ $(function () {
             if (data != null) {
               that.user = res.data.user;
             }
+          }
+        });
+      },
+
+      // 初始化区域
+      initArea() {
+        var that = this;
+        that.areaList = [];
+        that.order.area.id = '';
+        that.geoList = [];
+        that.order.geographyArea.id = '';
+        if (that.order.city.id === '') {
+          that.show('请选择城市');
+          return;
+        }
+        var data = {
+          type: 2,
+          parentId: that.order.city.id
+        }
+        this.ajax('/qfang-dictionary/area/areaList.json', data, function (res) {
+          if (res.data) {
+            that.areaList = res.data;
+          }
+        });
+      },
+      // 初始化片区
+      initGeo() {
+        var that = this;
+        that.geoList = [];
+        that.order.geographyArea.id = '';
+        if (that.order.area.id === '') {
+          that.show('请选择城市');
+          return;
+        }
+        var data = {
+          type: 3,
+          parentId: that.order.area.id
+        }
+        this.ajax('/qfang-dictionary/area/areaList.json', data, function (res) {
+          if (res.data) {
+            that.geoList = res.data;
           }
         });
       },
