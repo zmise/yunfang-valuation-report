@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>订单管理</title>
+  <link href="http://192.168.0.42/resource/cloud/css/global/base.css?v=20141111" rel="stylesheet" type="text/css" />
+  <link href="http://192.168.0.42/resource/cloud/css/global/widgets.css?v=20141111" rel="stylesheet" type="text/css" />
+  <link href="http://192.168.0.42/resource/cloud/css/global/button.css?v=20141111" rel="stylesheet" type="text/css" />
+  <link href="http://192.168.0.42/resource/cloud/css/module/table_inquiry.css?v=20141111" rel="stylesheet" type="text/css"
+  />
+  <link href="http://192.168.0.42/resource/cloud/css/global/table.css?v=20141111" rel="stylesheet" type="text/css" />
+
+  <link href="http://192.168.0.42/resource/cloud/css/global/general.css?v=20141111" rel="stylesheet" type="text/css" />
+  <link href="http://192.168.0.42/resource/cloud/css/module/cloud.css?v=20141111" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/toast.css">
+  <link rel="stylesheet" href="./index.css">
+  <script type="text/javascript" src="../../components/common/vue.js"></script>
+  <style>
+    [v-cloak] {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <form id="createForm" method="post">
+    <div class="layout-form pt10">
+      <div class="section">
+        <div class="hang flexbox">
+          <div class="box flex4"></div>
+          <div class="box flex14"></div>
+          <div class="box flex4"></div>
+          <div class="box flex5"></div>
+        </div>
+        <div class="hang flexbox">
+          <div class="box flex4"></div>
+          <div class="box flex5"></div>
+          <div class="box flex4"></div>
+          <div class="box flex5"></div>
+          <div class="box flex4"></div>
+          <div class="box flex5"></div>
+        </div>
+        <div class="hang flexbox">
+          <div class="box flex4"></div>
+          <div class="box flex5"></div>
+          <div class="box flex4"></div>
+          <div class="box flex5"></div>
+          <div class="box flex4"></div>
+          <div class="box flex5"></div>
+        </div>
+        <div class="hang flexbox">
+          <div class="box flex4"></div>
+          <div class="box flex23"></div>
+        </div>
+      </div>
+      <div class="title-item">物业信息</div>
+      <div class="section">
+        <div class="hang flexbox">
+          <div class="box flex8"></div>
+          <div class="box flex10"></div>
+          <div class="box flex8"></div>
+          <div class="box flex10"></div>
+          <div class="box flex8"></div>
+          <div class="box flex10"></div>
+          <div class="box flex12"></div>
+          <div class="box flex15"></div>
+        </div>
+        <div class="hang flexbox">
+          <div class="box flex4"></div>
+          <div class="box flex4"></div>
+          <div class="box flex4"></div>
+          <div class="box flex6"></div>
+          <div class="box flex4"></div>
+          <div class="box flex5"></div>
+        </div>
+        <div class="hang flexbox">
+          <div class="box flex4"></div>
+          <div class="box flex14"></div>
+          <div class="box flex4"></div>
+          <div class="box flex5"></div>
+        </div>
+        <div class="hang flexbox">
+          <div class="box flex4"></div>
+          <div class="box flex5"></div>
+          <div class="box flex4"></div>
+          <div class="box flex5"></div>
+          <div class="box flex4"></div>
+          <div class="box flex5"></div>
+        </div>
+        <div class="hang flexbox">
+          <div class="box flex4"></div>
+          <div class="box flex5"></div>
+          <div class="box flex4"></div>
+          <div class="box flex5"></div>
+          <div class="box flex4"></div>
+          <div class="box flex5"></div>
+        </div>
+        <div class="hang flexbox">
+          <div class="box flex4"></div>
+          <div class="box flex5"></div>
+          <div class="box flex4"></div>
+          <div class="box flex5"></div>
+          <div class="box flex4"></div>
+          <div class="box flex5"></div>
+        </div>
+        <div class="hang flexbox">
+          <div class="box flex4"></div>
+          <div class="box flex5"></div>
+          <div class="box flex4"></div>
+          <div class="box flex5"></div>
+          <div class="box flex4"></div>
+          <div class="box flex5"></div>
+        </div>
+      </div>
+      <div class="title-item">税费信息</div>
+      <div class="section">
+        <div class="hang flexbox">
+          <div class="box flex4"></div>
+          <div class="box flex5"></div>
+          <div class="box flex4"></div>
+          <div class="box flex5"></div>
+          <div class="box flex4"></div>
+          <div class="box flex5"></div>
+        </div>
+        <div class="hang flexbox">
+          <div class="box flex4"></div>
+          <div class="box flex5"></div>
+          <div class="box flex4"></div>
+          <div class="box flex5"></div>
+          <div class="box flex4"></div>
+          <div class="box flex5"></div>
+        </div>
+      </div>
+      <div class="title-item">业主信息</div>
+      <div class="section">
+        <div class="hang flexbox">
+          <div class="box flex4 flexbox">
+            <div class="box-item flex2"></div>
+            <div class="box-item flex5"></div>
+          </div>
+          <div class="box flex5"></div>
+          <div class="box flex4"></div>
+          <div class="box flex5"></div>
+          <div class="box flex4"></div>
+          <div class="box flex5"></div>
+        </div>
+      </div>
+      <div class="title-item">宗地信息</div>
+      <div class="section">
+        <div class="hang flexbox">
+          <div class="box flex4"></div>
+          <div class="box flex5"></div>
+          <div class="box flex4"></div>
+          <div class="box flex5"></div>
+          <div class="box flex4"></div>
+          <div class="box flex5"></div>
+        </div>
+        <div class="hang flexbox">
+          <div class="box flex4"></div>
+          <div class="box flex5"></div>
+          <div class="box flex4"></div>
+          <div class="box flex5"></div>
+          <div class="box flex4"></div>
+          <div class="box flex5"></div>
+        </div>
+        <div class="hang flexbox">
+          <div class="box flex4"></div>
+          <div class="box flex23"></div>
+        </div>
+      </div>
+      <div class="title-item">实勘信息</div>
+      <div class="section">
+        <div class="hang flexbox">
+          <div class="box flex4"></div>
+          <div class="box flex5"></div>
+          <div class="box flex4"></div>
+          <div class="box flex5"></div>
+          <div class="box flex4"></div>
+          <div class="box flex5"></div>
+        </div>
+        <div class="hang flexbox">
+          <div class="box flex4"></div>
+          <div class="box flex5"></div>
+          <div class="box flex4"></div>
+          <div class="box flex5"></div>
+          <div class="box flex4"></div>
+          <div class="box flex5"></div>
+        </div>
+        <div class="hang flexbox">
+          <div class="box flex4"></div>
+          <div class="box flex23"></div>
+        </div>
+        <div class="hang flexbox">
+          <div class="box flex4"></div>
+          <div class="box flex23"></div>
+        </div>
+        <div class="hang flexbox">
+          <div class="box flex4"></div>
+          <div class="box flex23"></div>
+        </div>
+        <div class="hang flexbox">
+          <div class="box flex4"></div>
+          <div class="box flex23"></div>
+        </div>
+        <div class="hang flexbox">
+          <div class="box flex4"></div>
+          <div class="box flex23"></div>
+        </div>
+      </div>
+    </div>
+  </form>
+  <input id="pageType" type="hidden" value="${pageType!''}" />
+  <input id="idInput" type="hidden" value="${id!''}" />
+
+  <script src="../../components/common/jquery-1.11.1.min.js"></script>
+  <script src="../../components/common/toast.js"></script>
+  <script src="./index.js"></script>
+</body>
+
+</html>

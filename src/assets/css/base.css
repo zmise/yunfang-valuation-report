@@ -63,7 +63,16 @@
   width: 330px;
 }
 
+.w125 {
+  width: 125px;
+}
+.ml10{
+  margin-left: 10px !important;
+}
 
+.ml40{
+  margin-left: 40px ;
+}
 .title-item {
   background-color: #ddd;
   width: 100%;
@@ -75,10 +84,12 @@
   padding-left: 20px;
 }
 
-html,body{
+html,
+body {
   overflow-x: hidden;
 }
 
-.value-color{
-  color:#0000FF;
+.value-color {
+  color: #0000FF;
 }
+

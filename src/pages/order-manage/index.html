@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>订单管理</title>
+  <link href="http://192.168.0.42/resource/cloud/css/global/base.css?v=20141111" rel="stylesheet" type="text/css" />
+  <link href="http://192.168.0.42/resource/cloud/css/global/widgets.css?v=20141111" rel="stylesheet" type="text/css" />
+  <link href="http://192.168.0.42/resource/cloud/css/global/button.css?v=20141111" rel="stylesheet" type="text/css" />
+  <link href="http://192.168.0.42/resource/cloud/css/module/table_inquiry.css?v=20141111" rel="stylesheet" type="text/css" />
+  <link href="http://192.168.0.42/resource/cloud/css/global/table.css?v=20141111" rel="stylesheet" type="text/css" />
+
+  <link href="http://192.168.0.42/resource/cloud/css/global/general.css?v=20141111" rel="stylesheet" type="text/css" />
+  <link href="http://192.168.0.42/resource/cloud/css/module/cloud.css?v=20141111" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/toast.css">
+  <link rel="stylesheet" href="./index.css">
+  <script type="text/javascript" src="../../components/common/vue.js"></script>
+  <style>
+    [v-cloak] {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <form id="createForm" method="post">
+    <div class="layout-form pt10">
+      <div class="section">
+        <div class="hang flexbox">
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p>单据编号：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex14">
+            <p v-model="order.orderNum" class="ml20">自动生成编号</p>
+          </div>
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p>
+              <i>*</i>评估方法：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex5">
+            <select :disabled="disabled" v-model="order.evaluationMethod" class="w125 ml10">
+              <option value="">请选择</option>
+              <option v-for="item in evaluationMethod" :value="item.name">{{item.desc}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="hang flexbox">
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p>委托渠道：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex5">
+            <select :disabled="disabled" v-model="order.delegateCompany.id" class="w140 ml20">
+              <option value="">选择委托渠道</option>
+              <option v-for="item in delegateCompanyList" :value="item.id">{{item.name}}</option>
+            </select>
+          </div>
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p>
+              <i>*</i>委托人姓名：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex5">
+            <input :disabled="disabled" v-model="order.delegatePersonName" class="flex-item" type="text" placeholder="文本，存在多个">
+          </div>
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p>
+              <i>*</i>委托人电话：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex5">
+            <input :disabled="disabled" v-model="order.delegatePersonPhone" class="flex-item" type="text" placeholder="多个电话逗号隔开">
+          </div>
+
+        </div>
+        <div class="hang flexbox">
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p>接单人：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex5">
+            <select :disabled="disabled" v-model="order.receiveOrderUser.id" class="w140 ml20">
+              <option value="">选择在职员工</option>
+              <option v-for="item in receiveOrderUserList" :value="item.id">{{item.name}}</option>
+            </select>
+          </div>
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p>选择评估师：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex5">
+            <select :disabled="disabled" v-model="order.evaluationUser.id" class="w140 ml20">
+              <option value="">多选在职评估师</option>
+              <option v-for="item in evaluationUserList" :value="item.id">{{item.name}}</option>
+            </select>
+          </div>
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p>估价时点：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex5">
+            <input :disabled="disabled" v-model="order.evaluationTime" type="text" id="" name="" maxlength="100" value=""
+              placeholder="选择日期" style="border: 1px solid #cdcdcd;" onclick="WdatePicker({isShowOthers:false,dateFmt:'yyyy-MM-dd HH:mm:ss'});"
+              class="dateInput w130">
+          </div>
+        </div>
+        <div class="hang flexbox">
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p>备注：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex23">
+            <input :disabled="disabled" v-model="order.delegateRemark" class="flex-item" type="text" placeholder="委托然与评价物业之间的关系等信息">
+          </div>
+        </div>
+      </div>
+      <div class="title-item">物业信息</div>
+      <div class="section">
+        <div class="hang flexbox">
+          <div class="flexbox flex-jc-fe flex-al-tc box flex8">
+            <p>
+              <i>*</i>城市：</p>
+          </div>
+          <!-- todo -->
+          <div class="flexbox flex-al-tc box flex10">
+            <select :disabled="disabled" v-model="order.city.id" class="w90 ml20">
+              <option value="">选择城市</option>
+              <option v-for="item in cityList" :value="item.id">{{item.name}}</option>
+            </select>
+          </div>
+          <div class="flexbox flex-jc-fe flex-al-tc box flex8">
+            <p>
+              <i>*</i>区域：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex10">
+            <select :disabled="disabled" v-model="order.area.id" class="w100 ml20">
+              <option value="">选择区域</option>
+            </select>
+          </div>
+          <div class="flexbox flex-jc-fe flex-al-tc box flex8">
+            <p>
+              <i>*</i>片区：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex10">
+            <select :disabled="disabled" v-model="order.geographyArea.id" class="w100 ml20">
+              <option value="">选择片区</option>
+            </select>
+          </div>
+          <div class="flexbox flex-jc-fe flex-al-tc box flex12">
+            <p>
+              <i>*</i>楼盘名称：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex15">
+            <input :disabled="disabled" v-model="order.garden.id" class="flex-item" type="text" placeholder="楼盘登记名">
+          </div>
+        </div>
+        <div class="hang flexbox">
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p>
+              <i>*</i>楼栋单元：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex4">
+            <!-- todo -->
+            <select :disabled="disabled" v-model="order.building.id" class="w100 ml20">
+              <option value="">选择楼栋单元</option>
+            </select>
+          </div>
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p>梯户比例：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex6">
+            <input :disabled="disabled" v-model="order.elevatorNum" class="w50" type="text" style="border: 1px solid #cdcdcd;">梯
+            <input :disabled="disabled" v-model="order.householdNum" class="w50" type="text" style="border: 1px solid #cdcdcd;">户
+          </div>
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p>
+              <i>*</i>房号：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex5">
+            <select :disabled="disabled" v-model="order.room.id" class="w125 ml10">
+              <option value="">选择房号</option>
+            </select>
+          </div>
+        </div>
+        <div class="hang flexbox">
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p>详细地址：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex14">
+            <input :disabled="disabled" v-model="order.gardenAddress" class="flex-item" type="text" placeholder="去建模楼盘详细地址">
+          </div>
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p>
+              <i>*</i>房屋用途：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex5">
+            <select :disabled="disabled" v-model="order.propertyType" class="w125 ml10">
+              <option value="">选择用途</option>
+              <option v-for="item in propertyTypeList" :value="item.name">{{item.desc}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="hang flexbox">
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p>
+              <i>*</i>最高楼层：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex5">
+            <input :disabled="disabled" v-model="order.highestFloor" class="flex-item" type="text" placeholder="楼栋单元最高楼层/层">
+          </div>
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p>
+              <i>*</i>物业楼层：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex5">
+            <input :disabled="disabled" v-model="order.propertyFloor" class="flex-item" type="text" placeholder="物业所在楼层/层">
+          </div>
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p>
+              <i>*</i>朝向：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex5">
+            <select :disabled="disabled" v-model="order.direction" class="w125 ml10">
+              <option value="">朝向</option>
+              <option v-for="item in directionList" :value="item.name">{{item.desc}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="hang flexbox">
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p>
+              <i>*</i>建筑面积：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex5">
+            <input :disabled="disabled" v-model="order.buildArea" class="flex-item" type="text" placeholder="取建模房间建筑面积㎡">
+          </div>
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p>
+              <i>*</i>套内面积</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex5">
+            <input :disabled="disabled" v-model="order.roomArea" class="flex-item" type="text" placeholder="取建模房间套内面积㎡">
+          </div>
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p>实际用途：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex5">
+            <select :disabled="disabled" v-model="order.factPropertyType" class="w125 ml10">
+              <option value="">住宅</option>
+              <option v-for="item in propertyTypeList" :value="item.name">{{item.desc}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="hang flexbox">
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p>竣工日期：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex5">
+            <input :disabled="disabled" v-model="order.completionTime" type="text" id="" name="" maxlength="100" value=""
+              placeholder="竣工日期" style="border: 1px solid #cdcdcd;" onclick="WdatePicker({isShowOthers:false,dateFmt:'yyyy-MM-dd HH:mm:ss'});"
+              class="dateInput w120">
+          </div>
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p>
+              <i>*</i>购买日期：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex5">
+            <input :disabled="disabled" v-model="order.purchaseTime" type="text" id="" name="" maxlength="100" value=""
+              placeholder="购买日期" style="border: 1px solid #cdcdcd;" onclick="WdatePicker({isShowOthers:false,dateFmt:'yyyy-MM-dd HH:mm:ss'});"
+              class="dateInput w120">
+          </div>
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p>
+              <i>*</i>登记日期：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex5">
+            <input :disabled="disabled" v-model="order.registerTime" type="text" id="" name="" maxlength="100" value=""
+              placeholder="登记日期" style="border: 1px solid #cdcdcd;" onclick="WdatePicker({isShowOthers:false,dateFmt:'yyyy-MM-dd HH:mm:ss'});"
+              class="dateInput w120">
+          </div>
+        </div>
+        <div class="hang flexbox">
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p>装修状况：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex5">
+            <select :disabled="disabled" v-model="order.decoration" class="w125 ml10">
+              <option value="">毛坯</option>
+              <option v-for="item in decorationList" :value="item.name">{{item.desc}}</option>
+            </select>
+          </div>
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p>使用状况：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex5">
+            <select :disabled="disabled" v-model="order.useState" class="w125 ml10">
+              <option value="">出租</option>
+            </select>
+          </div>
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p>维护状况：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex5">
+            <select :disabled="disabled" v-model="order.maintainState" class="w125 ml10">
+              <option value="">请选择</option>
+              <option v-for="item in maintainStateList" :value="item.name">{{item.desc}}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="title-item">税费信息</div>
+      <div class="section">
+        <div class="hang flexbox">
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p>
+              <i>*</i>产权类型：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex5">
+            <select :disabled="disabled" v-model="order.propertyRightType" class="w125 ml10">
+              <option value="">个人产权</option>
+              <option v-for="item in propertyRightTypeList" :value="item.name">{{item.desc}}</option>
+            </select>
+          </div>
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p>
+              <i>*</i>是否满2年：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex5">
+            <select :disabled="disabled" v-model="order.isTwoYear" class="w125 ml10">
+              <option value="1">是</option>
+              <option value="0">否</option>
+            </select>
+          </div>
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p>个税计算方式：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex5">
+            <select :disabled="disabled" v-model="order.taxCalMethod" class="w125 ml10">
+              <option value="">请选择</option>
+              <option v-for="item in taxCalMethodList" :value="item.name">{{item.desc}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="hang flexbox">
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p>
+              <i>*</i>贷款银行：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex5">
+            <select :disabled="disabled" v-model="order.loanBank.id" class="w125 ml10">
+              <option value="">读取银行管理</option>
+              <option v-for="item in loanBankList" :value="item.id">{{item.name}}</option>
+            </select>
+          </div>
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p>
+              <i>*</i>贷款产品：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex5">
+            <select :disabled="disabled" v-model="order.loan.id" class="w125 ml10">
+              <option value="">选择贷款产品</option>
+              <option v-for="item in loanList" :value="item.id">{{item.name}}</option>
+            </select>
+          </div>
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p>
+              <i>*</i>登记价：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex5">
+            <input :disabled="disabled" v-model="order.registerPrice" class="flex-item" type="text" placeholder="录入房产证登记价/元">
+          </div>
+        </div>
+      </div>
+      <!-- todo -->
+      <div class="title-item">业主信息</div>
+      <div class="section">
+        <div class="hang flexbox" v-for="(item, index) in ownerInfoList">
+          <!-- <input v-model="item.id" type="hidden" :value="">
+            <input v-model="item.city.id" type="hidden" :value="">
+            <input v-model="item.order.id" type="hidden" :value=""> -->
+          <div class="flexbox flex-al-tc box flex4 flexbox">
+            <div class="box-item flex2 flexbox flex-al-tc flex-jc-tc" style="height: 100%;">1</div>
+            <div class="box-item flexbox flex-jc-fe flex5">
+              <p><i>*</i>姓名：</p>
+            </div>
+          </div>
+          <div class="flexbox flex-al-tc box flex5">
+            <input :disabled="disabled" v-model="item.name" class="flex-item" type="text" placeholder="">
+          </div>
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p><i>*</i>产权比例：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex5">
+            <input :disabled="disabled" v-model="item.proportion" class="flex-item" type="text" placeholder="输入百分数">
+          </div>
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p>身份证号/护照号：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex5">
+            <input :disabled="disabled" v-model="item.idNum" class="flex-item" type="text" placeholder="业主身份证号">
+          </div>
+        </div>
+      </div>
+      <!-- todo -->
+
+      <div class="title-item">宗地信息</div>
+      <div class="section">
+        <div class="hang flexbox">
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p><i>*</i>宗地号：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex5">
+            <input :disabled="disabled" v-model="order.parcelNum" class="flex-item" type="text" placeholder="输入宗地号文本类型">
+          </div>
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p><i>*</i>宗地面积：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex5">
+            <input :disabled="disabled" v-model="order.parcelArea" class="flex-item" type="text" placeholder="取楼盘占地面积可编辑㎡">
+          </div>
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p><i>*</i>宗地用途：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex5">
+            <input :disabled="disabled" v-model="order.parcelPropertyType" class="flex-item" type="text" placeholder="xxx年">
+          </div>
+        </div>
+        <div class="hang flexbox">
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p><i>*</i>使用年限：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex5">
+            <input :disabled="disabled" v-model="order.parcelServiceLife" class="flex-item" type="text" placeholder="xxx年">
+          </div>
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p>
+              <i>*</i>起始使用日期：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex5">
+            <input :disabled="disabled" v-model="order.parcelStartUseTime" type="text" id="" name="" maxlength="100"
+              value="" placeholder="起始日期" style="border: 1px solid #cdcdcd;" onclick="WdatePicker({isShowOthers:false,dateFmt:'yyyy-MM-dd HH:mm:ss'});"
+              class="dateInput w120">
+          </div>
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p>
+              <i>*</i>终止使用日期：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex5">
+            <input :disabled="disabled" v-model="order.parcelEndUseTime" type="text" id="" name="" maxlength="100"
+              value="" placeholder="终止日期" style="border: 1px solid #cdcdcd;" onclick="WdatePicker({isShowOthers:false,dateFmt:'yyyy-MM-dd HH:mm:ss'});"
+              class="dateInput w120">
+          </div>
+        </div>
+        <div class="hang flexbox">
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p>房产/不动产证图片：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex23">
+            <input :disabled="disabled" v-model="order.houseImageUrl" type="file" id="fileName" name="fileName">
+          </div>
+        </div>
+      </div>
+      <div class="title-item">实勘信息</div>
+      <div class="section">
+        <div class="hang flexbox">
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p>实勘日期：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex5">
+            <input :disabled="disabled" v-model="order.realExplorationTime" type="text" id="" name="" maxlength="100"
+              value="" placeholder="实勘日期" style="border: 1px solid #cdcdcd;" onclick="WdatePicker({isShowOthers:false,dateFmt:'yyyy-MM-dd HH:mm:ss'});"
+              class="dateInput w120">
+          </div>
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p>外墙：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex5">
+            <select :disabled="disabled" v-model="order.outerWall" class="w125 ml10">
+              <option value="">条形状</option>
+              <option v-for="item in outerWallList" :value="item.name">{{item.desc}}</option>
+            </select>
+          </div>
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p>内墙：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex5">
+            <select :disabled="disabled" v-model="order.innerWall" class="w125 ml10">
+              <option value="">乳胶漆</option>
+              <option v-for="item in innerWallList" :value="item.name">{{item.desc}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="hang flexbox">
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p>天花板：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex5">
+            <select :disabled="disabled" v-model="order.ceiling" class="w125 ml10">
+              <option value="">乳胶漆</option>
+              <option v-for="item in ceilingList" :value="item.name">{{item.desc}}</option>
+            </select>
+          </div>
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p>地面：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex14">
+            <div class="list-item ml40">客厅</div>
+            <div class="list-item ml20">
+              <select :disabled="disabled" v-model="order.livingRoomGround" class="w100">
+                <option value="">地砖</option>
+                <option v-for="item in groundTypeList" :value="item.name">{{item.desc}}</option>
+              </select>
+            </div>
+            <div class="list-item ml40">房间</div>
+            <div class="list-item ml20">
+              <select :disabled="disabled" v-model="order.bedRoomGround" class="w100">
+                <option value="">地砖</option>
+                <option v-for="item in groundTypeList" :value="item.name">{{item.desc}}</option>
+              </select>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- todo  处理这两个order.innerDoor order.roomDoor-->
+
+        <div class="hang flexbox" style="height:auto">
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p>门、窗：</p>
+          </div>
+          <div class="flexbox flex-dic-cl box flex23">
+            <div class="flexbox flex-box-item">
+              <div class="list-item ml40">入户门</div>
+              <div class="list-item ml20 flex-item">
+                <label v-for="item in doorTypeList" class="mr60">
+                  <input :disabled="disabled" type="checkbox" alias="增值税" :value="item.name">
+                  <span>{{item.desc}}</span>
+                </label>
+              </div>
+            </div>
+            <div class="flexbox flex-box-item">
+              <div class="list-item ml40">房门</div>
+              <div class="list-item ml20 flex-item">
+                <label v-for="item in doorTypeList" class="mr60">
+                  <input :disabled="disabled" type="checkbox" alias="增值税" :value="item.name">
+                  <span>{{item.desc}}</span>
+                </label>
+              </div>
+            </div>
+            <div class="flexbox flex-box-item">
+              <div class="list-item ml40">窗</div>
+              <div class="list-item ml20">
+                <select :disabled="disabled" v-model="order.window" class="w100">
+                  <option value="">铝合金窗</option>
+                  <option v-for="item in windowTypeList" :value="item.name">{{item.desc}}</option>
+                </select>
+              </div>
+            </div>
+
+
+
+          </div>
+        </div>
+        <div class="hang flexbox">
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p>厨房：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex23">
+            <div class="list-item ml40">地面</div>
+            <div class="list-item ml20">
+              <select :disabled="disabled" v-model="order.kitchenGround" class="w100">
+                <option value="">地砖</option>
+                <option v-for="item in groundTypeList" :value="item.name">{{item.desc}}</option>
+              </select>
+            </div>
+            <div class="list-item ml40">内墙</div>
+            <div class="list-item ml20">
+              <select :disabled="disabled" v-model="order.kitchenInnerWall" class="w100">
+                <option value="">乳胶漆</option>
+                <option v-for="item in innerWallList" :value="item.name">{{item.desc}}</option>
+              </select>
+            </div>
+            <div class="list-item ml40">天花</div>
+            <div class="list-item ml20">
+              <select :disabled="disabled" v-model="order.kitchenCeiling" class="w100">
+                <option value="">乳胶漆</option>
+                <option v-for="item in ceilingList" :value="item.name">{{item.desc}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="hang flexbox">
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p>卫生间：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex23">
+            <div class="list-item ml40">地面</div>
+            <div class="list-item ml20">
+              <select :disabled="disabled" v-model="order.toiletGround" class="w100">
+                <option value="">地砖</option>
+                <option v-for="item in groundTypeList" :value="item.name">{{item.desc}}</option>
+              </select>
+            </div>
+            <div class="list-item ml40">内墙</div>
+            <div class="list-item ml20">
+              <select :disabled="disabled" v-model="order.toiletInnerWall" class="w100">
+                <option value="">乳胶漆</option>
+                <option v-for="item in innerWallList" :value="item.name">{{item.desc}}</option>
+              </select>
+            </div>
+            <div class="list-item ml40">天花</div>
+            <div class="list-item ml20">
+              <select :disabled="disabled" v-model="order.toiletCeiling" class="w100">
+                <option value="">乳胶漆</option>
+                <option v-for="item in ceilingList" :value="item.name">{{item.desc}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="hang flexbox">
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p>实勘照片上传</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex23">
+            <input :disabled="disabled" v-model="order.realExplorationImageUrl" type="file" id="fileName" name="fileName">
+          </div>
+        </div>
+        <div class="hang flexbox">
+          <div class="flexbox flex-jc-fe flex-al-tc box flex4">
+            <p>备注：</p>
+          </div>
+          <div class="flexbox flex-al-tc box flex23">
+            <input :disabled="disabled" v-model="order.realExplorationRemark" class="flex-item" type="text" placeholder="委托人于评估物业之前的关系等信息">
+          </div>
+        </div>
+      </div>
+    </div>
+  </form> <input :disabled="disabled" id="pageType" type="hidden" value="${pageType!''}" />
+  <input :disabled="disabled" id="idInput" type="hidden" value="${id!''}" />
+
+  <script src="../../components/common/jquery-1.11.1.min.js"></script>
+  <script src="../../components/common/toast.js"></script>
+  <script src="../../components/My97DatePicker/WdatePicker.js"></script>
+  <script src="./index.js"></script>
+</body>
+
+</html>
