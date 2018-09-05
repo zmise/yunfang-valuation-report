@@ -69,7 +69,7 @@
             </div>
             <div class="flexbox flex-al-tc pr30">
               <p class="w90 flexbox flex-jc-fe pr10">入职日期:</p>
-              <input :disabled="disabled" v-model="user.createTime" type="text" class="dateInput w160" id="" name="" maxlength="100" value="" onclick="WdatePicker({isShowOthers:false,dateFmt:'yyyy-MM-dd HH:mm:ss'});">
+              <input :disabled="disabled" v-model="user.createTime" type="text" class="dateInput w160" id="" name="" maxlength="100" value="" onclick="WdatePicker({isShowOthers:false,dateFmt:'yyyy-MM-dd',onpicked:function(){vm.user.createTime=this.value}});">
             </div>
             <div class="flexbox flex-al-tc pr30">
               <p class="w40">状态:</p>
@@ -120,7 +120,7 @@
           </div>
           <div class="flexbox flex-al-tc pr30">
             <p class="w60 flexbox flex-jc-fe pr10">有效期:</p>
-            <input :disabled="disabled" v-model="user.certValidTime" type="text" class="dateInput w160" id="" name="" maxlength="100" value="" onclick="WdatePicker({isShowOthers:false,dateFmt:'yyyy-MM-dd HH:mm:ss'});">
+            <input :disabled="disabled" v-model="user.certValidTime" type="text" class="dateInput w160" id="" name="" maxlength="100" value="" onclick="WdatePicker({isShowOthers:false,dateFmt:'yyyy-MM-dd',onpicked:function(){vm.user.certValidTime=this.value}});">
           </div>
           <div class="flexbox flex-al-tc pr30">
             <p class="w60">是否有章:</p>

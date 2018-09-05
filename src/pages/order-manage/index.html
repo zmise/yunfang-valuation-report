@@ -97,7 +97,7 @@
           </div>
           <div class="flexbox flex-al-tc box flex5">
             <input :disabled="disabled" v-model="order.evaluationTime" type="text" id="" name="" maxlength="100" value=""
-              placeholder="选择日期" style="border: 1px solid #cdcdcd;" onclick="WdatePicker({isShowOthers:false,dateFmt:'yyyy-MM-dd HH:mm:ss'});"
+              placeholder="选择日期" style="border: 1px solid #cdcdcd;" onclick="WdatePicker({isShowOthers:false,dateFmt:'yyyy-MM-dd',onpicked:function(){vm.order.evaluationTime=this.value}});"
               class="dateInput w130">
           </div>
         </div>
@@ -117,11 +117,10 @@
             <p>
               <i>*</i>城市：</p>
           </div>
-          <!-- todo -->
           <div class="flexbox flex-al-tc box flex10">
-            <select :disabled="disabled" v-model="order.city.id" class="w90 ml20" @change="initArea">
+            <select :disabled="disabled" v-model="city" class="w90 ml20" @change="initArea">
               <option value="">选择城市</option>
-              <option v-for="item in cityList" :value="item.id">{{item.name}}</option>
+              <option v-for="item in cityList" :value="item">{{item.name}}</option>
             </select>
           </div>
           <div class="flexbox flex-jc-fe flex-al-tc box flex8">
@@ -148,8 +147,13 @@
             <p>
               <i>*</i>楼盘名称：</p>
           </div>
-          <div class="flexbox flex-al-tc box flex15">
-            <input :disabled="disabled" v-model="order.garden.id" class="flex-item" type="text" placeholder="楼盘登记名">
+          <div class="flexbox flex-al-tc box flex15" style="position:relative">
+            <input :disabled="disabled" v-model="cityKeyword" @input="selectGardenList" class="flex-item" type="text" placeholder="楼盘登记名">
+            <div class="lists" v-if="gardenList.length&&cityKeyword">
+              <ul>
+                <li v-for="item in gardenList" :data-id="item.id" @click="buildingList">{{item.name}}</li>
+              </ul>
+            </div>
           </div>
         </div>
         <div class="hang flexbox">
@@ -159,8 +163,9 @@
           </div>
           <div class="flexbox flex-al-tc box flex4">
             <!-- todo -->
-            <select :disabled="disabled" v-model="order.building.id" class="w100 ml20">
+            <select :disabled="disabled" v-model="order.building.id" @change="roomListData" class="w100 ml20">
               <option value="">选择楼栋单元</option>
+              <option v-for="item in buildList" :value="item.id">{{item.name}}</option>
             </select>
           </div>
           <div class="flexbox flex-jc-fe flex-al-tc box flex4">
@@ -175,8 +180,9 @@
               <i>*</i>房号：</p>
           </div>
           <div class="flexbox flex-al-tc box flex5">
-            <select :disabled="disabled" v-model="order.room.id" class="w125 ml10">
+            <select :disabled="disabled" v-model="room" @change="changeData" class="w125 ml10">
               <option value="">选择房号</option>
+              <option v-for="item in roomList" :value="item">{{item.roomNumber}}</option>
             </select>
           </div>
         </div>
@@ -254,8 +260,8 @@
             <p>竣工日期：</p>
           </div>
           <div class="flexbox flex-al-tc box flex5">
-            <input :disabled="disabled" v-model="order.completionTime" type="text" id="" name="" maxlength="100" value=""
-              placeholder="竣工日期" style="border: 1px solid #cdcdcd;" onclick="WdatePicker({isShowOthers:false,dateFmt:'yyyy-MM-dd HH:mm:ss'});"
+            <input :disabled="disabled" v-model="order.completionTime" type="text" id="" name="" maxlength="100"
+              placeholder="竣工日期" style="border: 1px solid #cdcdcd;" onclick="WdatePicker({isShowOthers:false,dateFmt:'yyyy-MM-dd',onpicked:function(){vm.order.completionTime=this.value}});"
               class="dateInput w120">
           </div>
           <div class="flexbox flex-jc-fe flex-al-tc box flex4">
@@ -264,7 +270,7 @@
           </div>
           <div class="flexbox flex-al-tc box flex5">
             <input :disabled="disabled" v-model="order.purchaseTime" type="text" id="" name="" maxlength="100" value=""
-              placeholder="购买日期" style="border: 1px solid #cdcdcd;" onclick="WdatePicker({isShowOthers:false,dateFmt:'yyyy-MM-dd HH:mm:ss'});"
+              placeholder="购买日期" style="border: 1px solid #cdcdcd;" onclick="WdatePicker({isShowOthers:false,dateFmt:'yyyy-MM-dd',onpicked:function(){vm.order.purchaseTime=this.value}});"
               class="dateInput w120">
           </div>
           <div class="flexbox flex-jc-fe flex-al-tc box flex4">
@@ -273,7 +279,7 @@
           </div>
           <div class="flexbox flex-al-tc box flex5">
             <input :disabled="disabled" v-model="order.registerTime" type="text" id="" name="" maxlength="100" value=""
-              placeholder="登记日期" style="border: 1px solid #cdcdcd;" onclick="WdatePicker({isShowOthers:false,dateFmt:'yyyy-MM-dd HH:mm:ss'});"
+              placeholder="登记日期" style="border: 1px solid #cdcdcd;" onclick="WdatePicker({isShowOthers:false,dateFmt:'yyyy-MM-dd',onpicked:function(){vm.order.registerTime=this.value}});"
               class="dateInput w120">
           </div>
         </div>
@@ -345,7 +351,7 @@
               <i>*</i>贷款银行：</p>
           </div>
           <div class="flexbox flex-al-tc box flex5">
-            <select :disabled="disabled" v-model="order.loanBank.id" class="w125 ml10">
+            <select :disabled="disabled" v-model="order.loanBank.id" @change="initLoan" class="w125 ml10">
               <option value="">读取银行管理</option>
               <option v-for="item in loanBankList" :value="item.id">{{item.name}}</option>
             </select>
@@ -372,7 +378,7 @@
       <!-- todo -->
       <div class="title-item">业主信息</div>
       <div class="section">
-        <div class="hang flexbox" v-for="(item, index) in ownerInfoList">
+        <div class="hang flexbox" v-for="(item, index) in order.ownerInfoList">
           <!-- <input v-model="item.id" type="hidden" :value="">
             <input v-model="item.city.id" type="hidden" :value="">
             <input v-model="item.order.id" type="hidden" :value=""> -->
@@ -436,7 +442,7 @@
           </div>
           <div class="flexbox flex-al-tc box flex5">
             <input :disabled="disabled" v-model="order.parcelStartUseTime" type="text" id="" name="" maxlength="100"
-              value="" placeholder="起始日期" style="border: 1px solid #cdcdcd;" onclick="WdatePicker({isShowOthers:false,dateFmt:'yyyy-MM-dd HH:mm:ss'});"
+              value="" placeholder="起始日期" style="border: 1px solid #cdcdcd;" onclick="WdatePicker({isShowOthers:false,dateFmt:'yyyy-MM-dd',onpicked:function(){vm.order.parcelStartUseTime=this.value}});"
               class="dateInput w120">
           </div>
           <div class="flexbox flex-jc-fe flex-al-tc box flex4">
@@ -445,7 +451,7 @@
           </div>
           <div class="flexbox flex-al-tc box flex5">
             <input :disabled="disabled" v-model="order.parcelEndUseTime" type="text" id="" name="" maxlength="100"
-              value="" placeholder="终止日期" style="border: 1px solid #cdcdcd;" onclick="WdatePicker({isShowOthers:false,dateFmt:'yyyy-MM-dd HH:mm:ss'});"
+              value="" placeholder="终止日期" style="border: 1px solid #cdcdcd;" onclick="WdatePicker({isShowOthers:false,dateFmt:'yyyy-MM-dd',onpicked:function(){vm.order.parcelEndUseTime=this.value}});"
               class="dateInput w120">
           </div>
         </div>
@@ -466,7 +472,7 @@
           </div>
           <div class="flexbox flex-al-tc box flex5">
             <input :disabled="disabled" v-model="order.realExplorationTime" type="text" id="" name="" maxlength="100"
-              value="" placeholder="实勘日期" style="border: 1px solid #cdcdcd;" onclick="WdatePicker({isShowOthers:false,dateFmt:'yyyy-MM-dd HH:mm:ss'});"
+              value="" placeholder="实勘日期" style="border: 1px solid #cdcdcd;" onclick="WdatePicker({isShowOthers:false,dateFmt:'yyyy-MM-dd',onpicked:function(){vm.order.realExplorationTime=this.value}});"
               class="dateInput w120">
           </div>
           <div class="flexbox flex-jc-fe flex-al-tc box flex4">

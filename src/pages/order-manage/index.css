@@ -142,3 +142,31 @@ label input[type="radio"] {
   -webkit-appearance: none;
   text-shadow: 0 1px 0 rgb(240, 240, 240);
 }
+
+.lists {
+  position: absolute;
+  top: 35px;
+  left: 10px;
+  width: 208px;
+  z-index: 1000;
+  background-color: #fff;
+  border: 1px solid #cdcdcd;
+  border-top: 0;
+}
+.lists li{
+  height: 35px;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  color: #333;
+  font-size: 12px;
+  padding-left: 10px;
+  margin: 0;
+  border: 0;
+  outline: 0;
+  font-weight: normal;
+  font-style: inherit;
+  font-size: 12px;
+  font-family: inherit;
+}

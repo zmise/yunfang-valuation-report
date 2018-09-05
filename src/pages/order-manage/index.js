@@ -162,11 +162,6 @@ $(function () {
     // }],
     loanBankList: [],
 
-    // loanList: [{  //贷款产品
-    //   id: 123,
-    //   name: '招商银行'
-    // }],
-    loanList: [],
 
     // outerWallList: [{  //外墙
     //   name: 'DRY_WALL',
@@ -303,23 +298,24 @@ $(function () {
       toiletCeiling: '', //'卫生间天花板',
       realExplorationImageUrl: '', //'实勘照片url',
       realExplorationRemark: '', //'实勘备注'
-    },
-    ownerInfoList: [   //用户信息数组
-      {
-        id: '',
-        city: {
-          id: '', //'城市id'
-        },
-        order: {
-          id: '', //'订单id'
-        },
+      ownerInfoList: [   //用户信息数组
+        {
+          id: '',
+          city: {
+            id: '', //'城市id'
+          },
+          order: {
+            id: '', //'订单id'
+          },
 
-        name: '', //'姓名',
-        proportion: '', //'产权比例',
-        idNum: '', //'身份证或护照号'
-      }
-    ],
-    // ownerInfoList:[],
+          name: '', //'姓名',
+          proportion: '', //'产权比例',
+          idNum: '', //'身份证或护照号'
+        }
+      ],
+      // ownerInfoList:[],
+    },
+
 
     // factPropertyTypeList: [{   //实际用途
     //   name: 'ABCDE',
@@ -334,28 +330,53 @@ $(function () {
     areaList: [],  //区域
     geoList: [],  //片区
 
+    // loanList: [{  //贷款产品
+    //   id: 123,
+    //   name: '招商银行'
+    // }],
+    loanList: [],
+
+    cityFullpinyin: '',// 城市全拼
+    city: '', //城市信息
+
+    cityKeyword: '', //搜索关键词
+
+    gardenList: [],
+
+    buildingId: '', // 楼栋单元id
+    buildList: [],
+
+    roomList: [],
+
+    room: '', // 房间
   };
 
   var vm = new Vue({
     el: '#createForm',
     data: data,
-    mounted() { this.init(); },
+    mounted() {
+      this.init();
+      if (pageType === 'view') {
+        this.disabled = true;
+      }
+    },
     methods: {
       init() {
         var that = this;
         var data = null;
-        // if (id) {
-        //   data = {
-        //     id,
-        //     cityId,
-        //     city,
-        //   }
-        // } else {
-        //   data = {
-        //     cityId,
-        //     city,
-        //   }
-        // }
+        if (id) {
+          data = {
+            id,
+            cityId,
+            city,
+          }
+        } else {
+          data = {
+            cityId,
+            city,
+          }
+        }
+        data = null;
         this.ajax('/qfang-dictionary/assess/order/info.json', data, function (res) {
           if (res.data) {
             that.evaluationMethod = res.data.evaluationMethod;
@@ -371,7 +392,6 @@ $(function () {
             that.propertyRightTypeList = res.data.propertyRightTypeList;
             that.taxCalMethodList = res.data.taxCalMethodList;
             that.loanBankList = res.data.loanBankList;
-            that.loanList = res.data.loanList;
             that.outerWallList = res.data.outerWallList;
             that.innerWallList = res.data.innerWallList;
             that.ceilingList = res.data.ceilingList;
@@ -388,18 +408,28 @@ $(function () {
       // 初始化区域
       initArea() {
         var that = this;
-        that.areaList = [];
-        that.order.area.id = '';
-        that.geoList = [];
-        that.order.geographyArea.id = '';
-        if (that.order.city.id === '') {
-          that.show('请选择城市');
+        this.areaList = [];
+        this.order.area.id = '';
+        this.geoList = [];
+        this.order.geographyArea.id = '';
+
+        if (this.city !== '') {
+          this.order.city.id = this.city.id;
+          this.cityFullpinyin = this.city.fullPinyin;
+        } else {
+          this.order.city.id = '';
+          this.cityFullpinyin = '';
+        }
+
+        if (this.order.city.id === '') {
+          this.show('请选择城市');
           return;
         }
         var data = {
           type: 2,
-          parentId: that.order.city.id
+          parentId: this.order.city.id
         }
+        data = null;
         this.ajax('/qfang-dictionary/area/areaList.json', data, function (res) {
           if (res.data) {
             that.areaList = res.data;
@@ -409,19 +439,114 @@ $(function () {
       // 初始化片区
       initGeo() {
         var that = this;
-        that.geoList = [];
-        that.order.geographyArea.id = '';
-        if (that.order.area.id === '') {
-          that.show('请选择城市');
+        this.geoList = [];
+        this.order.geographyArea.id = '';
+        if (this.order.area.id === '') {
+          this.show('请选择城市');
           return;
         }
         var data = {
           type: 3,
-          parentId: that.order.area.id
+          parentId: this.order.area.id
         }
+        data = null;
         this.ajax('/qfang-dictionary/area/areaList.json', data, function (res) {
           if (res.data) {
             that.geoList = res.data;
+          }
+        });
+      },
+
+      // 小区接口
+      selectGardenList(val) {
+        var that = this;
+        var data = {
+          _city: this.cityFullpinyin,
+          cityId: this.order.city.id,
+          keyword: this.cityKeyword
+        }
+        data = null;
+        this.ajax('/qfang-dictionary/gardenManager/gardenList.json', data, function (res) {
+          if (res.data && res.data.gardenList) {
+            that.buildList = [];
+            that.houseList = [];
+            that.gardenIndex = '';
+            that.initData();
+            that.gardenList = res.data.gardenList;
+          }
+        });
+      },
+      // 楼栋接口
+      buildingList(val) {
+        var that = this;
+        this.order.garden.id = val.target.attributes[0].value;
+        this.cityKeyword = val.target.innerText;
+        this.gardenList = [];
+        this.initData();
+        var data = {
+          _city: this.cityFullpinyin,
+          gardenId: this.order.garden.id,
+        }
+        data = null;
+        this.ajax('/qfang-dictionary/gardenManager/building/buildingList.json', data, function (res) {
+          if (res.data && res.data.buildingList) {
+            that.buildList = res.data.buildingList;
+          }
+        });
+      },
+      // 房号接口
+      roomListData() {
+        var that = this;
+        this.initData();
+        var data = {
+          _city: this.cityFullpinyin,
+          buildingId: this.order.building.id,
+        }
+        data = null;
+        this.ajax('/qfang-dictionary/gardenManager/room/roomList.json', data, function (res) {
+          if (res.data && res.data.roomList) {
+            that.roomList = res.data.roomList;
+          }
+        });
+      },
+      // 改变数据
+      changeData() {
+        this.order.room.id = this.room.id || '';
+        this.order.highestFloor = this.room.maxFloor || '';
+        this.order.buildArea = this.room.buildArea || '';
+        this.order.direction = this.room.direction || '';
+        this.order.decoration = this.room.decoration || '';
+        this.order.propertyFloor = this.room.floor || '';
+        this.order.propertyType = this.room.propertyType || '';
+        this.order.roomArea = this.room.roomArea || '';
+      },
+      // 清空数据
+      initData() {
+        this.room = '';
+        this.order.room.id = '';
+        this.order.highestFloor = '';
+        this.order.buildArea = '';
+        this.order.direction = '';
+        this.order.decoration = '';
+        this.order.propertyFloor = '';
+        this.order.propertyType = '';
+        this.order.roomArea = '';
+      },
+
+      // 初始化贷款产品
+      initLoan() {
+        var that = this;
+        if (this.order.loanBank.id === '') {
+          this.show('请选择贷款银行');
+          return;
+        }
+        var data = {
+          companyId: this.order.loanBank.id
+        }
+        data = null;
+        this.ajax('/qfang-dictionary/assess/loanConfig/getLoanConfigByCompanyId.json', data, function (res) {
+          if (res.data && res.data.loanList) {
+            that.loanList = res.data.loanList;
           }
         });
       },
