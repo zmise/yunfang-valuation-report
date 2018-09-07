@@ -22,52 +22,82 @@
 //       top: '0',
 //   });
 // function dealObjectValue(obj) {
-//     var param = {};
-//     if (obj === null || obj === undefined || obj === "") return param;
-//     for (var key in obj) {
-//         if ($.type(obj[key]) === "Object") {
-//             param[key] = dealObjectValue(obj[key]);
-//         } else if (obj[key] !== null && obj[key] !== undefined && obj[key] !== "") {
-//             param[key] = obj[key];
-//         }
-//     }
-//     return param;
+//   var param = {};
+//   if (obj === null || obj === undefined || obj === "") return param;
+//   for (var key in obj) {
+//       // console.log(key, typeof (obj[key]) === "object");
+//       if (typeof (obj[key]) === "object") {
+//           if (JSON.stringify(dealObjectValue(obj[key])) !== '{}') {
+//               param[key] = dealObjectValue(obj[key]);
+//           }
+//       } else if (obj[key] !== null && obj[key] !== undefined && obj[key] !== "") {
+//           param[key] = obj[key];
+//       }
+//   }
+//   return param;
 // };
 // com.qfang.dictionary.assess.order.assessOrderCreate = {
-//     init: function () {
-//         window._cqdauauc = com.qfang.dictionary.assess.order.assessOrderCreate;
-//     },
-//     save: function () {
-//         var data = vm.order;
+//   init: function () {
+//       window._cqdauauc = com.qfang.dictionary.assess.order.assessOrderCreate;
+//   },
+//   save: function () {
+//       var data = vm.order;
+//       // console.log(data);
+//       // return
+//       // if (data.company.id == '') {
+//       //     vm.show('请选择公司');
+//       //     return;
+//       // }
+//       // console.log(data.completionTime);
+//       // console.log(dealObjectValue(data));
 
-//         if (data.company.id == '') {
-//             vm.show('请选择公司');
-//             return;
-//         }
-
-//         data = JSON.stringify(dealObjectValue(data));
-//         // console.log(data);
-//         $.ajax({
-//             url: '/qfang-dictionary/assess/user/save.json',
-//             type: 'POST',
-//             dataType: 'JSON',
-//             data: data,
-//             contentType: "application/json; charset=utf-8",
-//             success: function (res) {
-//                 if (res.status) {
-//                     show(res.errDesc);
-//                     return
-//                 }
-//                 show('保存成功');
-//                 setTimeout(() => {
-//                     art.dialog.close();
-//                 }, 1000);
-//             },
-//             error: function (XMLHttpRequest, textStatus, errorThrown) {
-//                 show('服务器出问题');
-//             }
-//         });
-//     }
+//       data = JSON.stringify(dealObjectValue(data));
+//       // return
+//       $.ajax({
+//           url: '/qfang-dictionary/assess/order/save.json',
+//           type: 'POST',
+//           dataType: 'JSON',
+//           data: data,
+//           contentType: "application/json; charset=utf-8",
+//           success: function (res) {
+//               if (res.status) {
+//                   vm.show(res.errDesc);
+//                   return
+//               }
+//               vm.show('保存成功');
+//               setTimeout(() => {
+//                   art.dialog.close();
+//               }, 1000);
+//           },
+//           error: function (XMLHttpRequest, textStatus, errorThrown) {
+//               vm.show('服务器出问题');
+//           }
+//       });
+//   },
+//   createReport: function () {
+//       var data = vm.order;
+//       data = JSON.stringify(dealObjectValue(data));
+//       $.ajax({
+//           url: '/qfang-dictionary/assess/order/createReport.json',
+//           type: 'POST',
+//           dataType: 'JSON',
+//           data: data,
+//           contentType: "application/json; charset=utf-8",
+//           success: function (res) {
+//               if (res.status) {
+//                   vm.show(res.errDesc);
+//                   return
+//               }
+//               vm.show('保存成功');
+//               setTimeout(() => {
+//                   art.dialog.close();
+//               }, 1000);
+//           },
+//           error: function (XMLHttpRequest, textStatus, errorThrown) {
+//               vm.show('服务器出问题');
+//           }
+//       });
+//   }
 // }
 
 $(function () {
@@ -314,6 +344,9 @@ $(function () {
         }
       ],
       // ownerInfoList:[],
+
+      roomName: '',// 房号
+      buildingName: '',// 楼栋名
     },
 
 
@@ -348,7 +381,8 @@ $(function () {
 
     roomList: [],
 
-    room: '', // 房间
+    room: '', // 房间信息
+    building: '', // 楼栋信息
   };
 
   var vm = new Vue({
@@ -482,6 +516,11 @@ $(function () {
         this.order.garden.id = val.target.attributes[0].value;
         this.cityKeyword = val.target.innerText;
         this.gardenList = [];
+
+        this.building = '';
+        this.order.buildingName = '';
+        this.order.building.id =  '';
+
         this.initData();
         var data = {
           _city: this.cityFullpinyin,
@@ -495,8 +534,10 @@ $(function () {
         });
       },
       // 房号接口
-      roomListData() {
+      roomListData(val) {
         var that = this;
+        this.order.building.id = this.building.id;
+        this.order.buildingName = this.building.name;
         this.initData();
         var data = {
           _city: this.cityFullpinyin,
@@ -511,6 +552,7 @@ $(function () {
       },
       // 改变数据
       changeData() {
+        this.order.roomName = this.room.roomNumber || '';
         this.order.room.id = this.room.id || '';
         this.order.highestFloor = this.room.maxFloor || '';
         this.order.buildArea = this.room.buildArea || '';
@@ -523,6 +565,7 @@ $(function () {
       // 清空数据
       initData() {
         this.room = '';
+        this.order.roomName = '';
         this.order.room.id = '';
         this.order.highestFloor = '';
         this.order.buildArea = '';
@@ -678,6 +721,5 @@ $(function () {
       top: '0',
     });
   }
-
 
 });

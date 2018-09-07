@@ -163,9 +163,9 @@
           </div>
           <div class="flexbox flex-al-tc box flex4">
             <!-- todo -->
-            <select :disabled="disabled" v-model="order.building.id" @change="roomListData" class="w100 ml20">
+            <select :disabled="disabled" v-model="building" @change="roomListData" class="w100 ml20">
               <option value="">选择楼栋单元</option>
-              <option v-for="item in buildList" :value="item.id">{{item.name}}</option>
+              <option v-for="item in buildList" :value="item">{{item.name}}</option>
             </select>
           </div>
           <div class="flexbox flex-jc-fe flex-al-tc box flex4">
