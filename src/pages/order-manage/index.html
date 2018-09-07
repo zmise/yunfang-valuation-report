@@ -14,6 +14,8 @@
 
   <link href="http://192.168.0.42/resource/cloud/css/global/general.css?v=20141111" rel="stylesheet" type="text/css" />
   <link href="http://192.168.0.42/resource/cloud/css/module/cloud.css?v=20141111" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" href="../../assets/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../../assets/css/bootstrap-select.min.css">
   <link rel="stylesheet" href="../../assets/css/base.css">
   <link rel="stylesheet" href="../../assets/css/toast.css">
   <link rel="stylesheet" href="./index.css">
@@ -86,11 +88,27 @@
           <div class="flexbox flex-jc-fe flex-al-tc box flex4">
             <p>选择评估师：</p>
           </div>
-          <div class="flexbox flex-al-tc box flex5">
+          <!-- <div class="flexbox flex-al-tc box flex5">
             <select :disabled="disabled" v-model="order.evaluationUser.id" class="w140 ml20">
               <option value="">多选在职评估师</option>
               <option v-for="item in evaluationUserList" :value="item.id">{{item.name}}</option>
             </select>
+          </div> -->
+
+          <div class="flexbox flex-al-tc box flex5" style="position:relative">
+            <div :disabled="disabled" v-model="order.evaluationUser.id" class="box-select w140 ml20">
+              多选在职评估师
+            </div>
+            <div class="dropdown-menu open" role="combobox" style="max-height: 877px; overflow: hidden; min-height: 92px;">
+              <ul class="dropdown-menu inner" role="listbox" aria-expanded="true" style="max-height: 865px; overflow-y: auto; min-height: 80px;">
+                <li v-for="(item,index) in evaluationUserList" :index="index" :item-id="item.id">
+                  <a tabindex="0" class="" data-tokens="null" role="option">
+                    <span class="text">{{item.name}}</span>
+                    <span class="glyphicon glyphicon-ok check-mark"></span>
+                  </a>
+                </li>
+              </ul>
+            </div>
           </div>
           <div class="flexbox flex-jc-fe flex-al-tc box flex4">
             <p>估价时点：</p>
@@ -148,7 +166,8 @@
               <i>*</i>楼盘名称：</p>
           </div>
           <div class="flexbox flex-al-tc box flex15" style="position:relative">
-            <input :disabled="disabled" v-model="cityKeyword" @input="selectGardenList" class="flex-item" type="text" placeholder="楼盘登记名">
+            <input :disabled="disabled" v-model="cityKeyword" @input="selectGardenList" class="flex-item" type="text"
+              placeholder="楼盘登记名">
             <div class="lists" v-if="gardenList.length&&cityKeyword">
               <ul>
                 <li v-for="item in gardenList" :data-id="item.id" @click="buildingList">{{item.name}}</li>
